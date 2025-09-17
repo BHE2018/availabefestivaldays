@@ -47,7 +47,7 @@
     .modal-grid{display:grid;gap:10px;grid-template-columns:repeat(2,1fr)}
     .modal-grid.full{grid-template-columns:1fr}
     label{font-size:13px;color:var(--muted);display:block;margin-bottom:6px}
-    input[type=text], textarea{ min-height:96px; max-height:40vh; resize:vertical; }
+    input[type=text], textarea{width:100%;padding:8px 10px;border-radius:10px;border:1px solid var(--border);background:#fff;color:var(--text);outline:none;transition:.15s ease;font-size:15px;line-height:1.4;height:auto;min-height:36px} textarea{min-height:60px;max-height:30vh;resize:vertical;}
     input:focus, textarea:focus{box-shadow:0 0 0 4px var(--ring);border-color:#93c5fd}
     textarea{ min-height:96px; max-height:40vh; resize:vertical; }
     .modal-foot{display:flex;gap:10px;padding:14px 16px;border-top:1px solid var(--border);justify-content:flex-end}
@@ -90,6 +90,15 @@ dialog::backdrop{ background:rgba(0,0,0,.35); backdrop-filter:blur(2px); }
 .modal-grid.two{ display:grid; gap:10px; grid-template-columns:repeat(2,1fr); }
 @media(max-width:480px){ .modal-grid.two{ grid-template-columns:1fr; } }
 .modal-body > *:last-child{ margin-bottom:140px; }
+</style>
+<style id="compact-controls">
+/* denser form controls so Comments fits without scrolling too far */
+.modal-body{ gap:10px; }
+label{ font-size:13px; margin-bottom:4px; }
+input[type=text], textarea{ padding:8px 12px; line-height:1.2; font-size:16px; border-radius:12px; }
+textarea{ min-height:72px; max-height:40vh; resize:vertical; }
+/* keep two columns on most phones; only stack on very small widths */
+@media (max-width:360px){ .modal-grid.two{ grid-template-columns:1fr !important; } }
 </style>
 </head>
 <body>
