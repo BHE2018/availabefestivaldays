@@ -43,13 +43,13 @@
     dialog{border:none;border-radius:16px;padding:0;overflow:hidden;background:#fff;color:#111827;width:min(640px,96vw);box-shadow:0 30px 60px rgba(0,0,0,.12)}
     dialog::backdrop{background:rgba(0,0,0,.35);backdrop-filter:blur(2px)}
     .modal-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border)}
-    .modal-body{padding:16px;display:grid;gap:14px}
+    .modal-body{ padding:16px; display:grid; gap:14px; overflow:auto; -webkit-overflow-scrolling:touch; flex:1 1 auto; padding-bottom: calc(20px + 92px + env(safe-area-inset-bottom)); }
     .modal-grid{display:grid;gap:10px;grid-template-columns:repeat(2,1fr)}
     .modal-grid.full{grid-template-columns:1fr}
     label{font-size:13px;color:var(--muted);display:block;margin-bottom:6px}
-    input[type=text], textarea{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:#fff;color:var(--text);outline:none;transition:.15s ease;font-size:16px}
+    input[type=text], textarea{ min-height:84px; max-height:40vh; resize:vertical; }
     input:focus, textarea:focus{box-shadow:0 0 0 4px var(--ring);border-color:#93c5fd}
-    textarea{min-height:96px;resize:vertical}
+    textarea{ min-height:84px; max-height:40vh; resize:vertical; }
     .modal-foot{display:flex;gap:10px;padding:14px 16px;border-top:1px solid var(--border);justify-content:flex-end}
     @media (max-width:720px){.wrap{padding:12px 14px}.brand h1{font-size:16px}.calendar{grid-template-columns:1fr;gap:10px}.btn{padding:14px 16px;border-radius:14px}.modal-grid{grid-template-columns:1fr}.day .head{padding:12px}.meta{padding:10px 12px;gap:8px}.foot{padding:10px 12px}.pill{font-size:11px}}
   </style>
@@ -63,7 +63,7 @@ dialog{
 }
 dialog::backdrop{ background:rgba(0,0,0,.35); backdrop-filter:blur(2px); }
 .modal-head{ display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid var(--border); flex:0 0 auto; }
-.modal-body{ padding:16px; display:grid; gap:14px; overflow:auto; -webkit-overflow-scrolling:touch; flex:1 1 auto; }
+.modal-body{ padding:16px; display:grid; gap:14px; overflow:auto; -webkit-overflow-scrolling:touch; flex:1 1 auto; padding-bottom: calc(20px + 92px + env(safe-area-inset-bottom)); }
 .modal-foot{ display:flex; gap:10px; padding:14px 16px; border-top:1px solid var(--border); justify-content:flex-end; background:#fff; position:sticky; bottom:0; flex:0 0 auto; }
 @media (max-width:720px){
   dialog{ width:100vw; max-width:100vw; height:100dvh; max-height:100dvh; margin:0; border-radius:16px; }
@@ -83,6 +83,13 @@ dialog::backdrop{ background:rgba(0,0,0,.35); backdrop-filter:blur(2px); }
 /* Two-column grids to surface comments sooner */
 .modal-grid.two{ display:grid; gap:10px; grid-template-columns:repeat(2,1fr); }
 @media (max-width:420px){ .modal-grid.two{ grid-template-columns:1fr; } }
+</style>
+<style id="modal-layout-fix">
+/* Ensure comment box is visible above sticky footer */
+.modal-body{ padding:16px; display:grid; gap:14px; overflow:auto; -webkit-overflow-scrolling:touch; flex:1 1 auto; padding-bottom: calc(20px + 92px + env(safe-area-inset-bottom)); }
+.modal-grid.two{ display:grid; gap:10px; grid-template-columns:repeat(2,1fr); }
+@media(max-width:480px){ .modal-grid.two{ grid-template-columns:1fr; } }
+:where(.modal-body) > *:last-child{ margin-bottom: 120px; }
 </style>
 </head>
 <body>
