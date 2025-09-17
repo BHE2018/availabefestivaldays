@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Bubblehead — Artist Shift Picker</title>
   <style>
     :root { --bg:#f6f7fb; --card:#ffffff; --muted:#6b7280; --text:#111827; --accent:#3b82f6; --accent-2:#60a5fa; --ring:#93c5fd66; --border:#e5e7eb; --shadow:0 8px 24px rgba(17,24,39,.06); }
@@ -40,7 +40,7 @@
     .toast{position:fixed;inset-inline:0;top:16px;display:grid;place-items:center;pointer-events:none;z-index:60}
     .toast .bubble{pointer-events:auto;background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0;box-shadow:var(--shadow);padding:12px 16px;border-radius:12px;opacity:0;transform:translateY(-8px);transition:.25s ease}
     .toast.show .bubble{opacity:1;transform:translateY(0)}
-    dialog{border:none;border-radius:16px;padding:0;overflow:hidden;background:#fff;color:#text;width:min(640px,96vw);box-shadow:0 30px 60px rgba(0,0,0,.12)}
+    dialog{border:none;border-radius:16px;padding:0;overflow:hidden;background:#fff;color:#111827;width:min(640px,96vw);box-shadow:0 30px 60px rgba(0,0,0,.12)}
     dialog::backdrop{background:rgba(0,0,0,.35);backdrop-filter:blur(2px)}
     .modal-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border)}
     .modal-body{padding:16px;display:grid;gap:14px}
@@ -53,6 +53,29 @@
     .modal-foot{display:flex;gap:10px;padding:14px 16px;border-top:1px solid var(--border);justify-content:flex-end}
     @media (max-width:720px){.wrap{padding:12px 14px}.brand h1{font-size:16px}.calendar{grid-template-columns:1fr;gap:10px}.btn{padding:14px 16px;border-radius:14px}.modal-grid{grid-template-columns:1fr}.day .head{padding:12px}.meta{padding:10px 12px;gap:8px}.foot{padding:10px 12px}.pill{font-size:11px}}
   </style>
+<style id="mobile-modal-fixes">
+/* Modal layout: full-height, scrollable body, sticky actions */
+dialog{
+  border:none; border-radius:16px; padding:0; overflow:hidden;
+  background:#fff; color:#111827; width:min(640px,96vw);
+  max-height:92vh; display:flex; flex-direction:column;
+  box-shadow:0 30px 60px rgba(0,0,0,.12);
+}
+dialog::backdrop{ background:rgba(0,0,0,.35); backdrop-filter:blur(2px); }
+.modal-head{ display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid var(--border); flex:0 0 auto; }
+.modal-body{ padding:16px; display:grid; gap:14px; overflow:auto; -webkit-overflow-scrolling:touch; flex:1 1 auto; }
+.modal-foot{ display:flex; gap:10px; padding:14px 16px; border-top:1px solid var(--border); justify-content:flex-end; background:#fff; position:sticky; bottom:0; flex:0 0 auto; }
+@media (max-width:720px){
+  dialog{ width:100vw; max-width:100vw; height:100dvh; max-height:100dvh; margin:0; border-radius:16px; }
+  .modal-grid{ grid-template-columns:1fr }
+}
+@supports(height: 100dvh){ dialog{ max-height:90dvh; } }
+.modal-foot{ padding-bottom: calc(14px + env(safe-area-inset-bottom)); }
+</style>
+<style id="button-only-selectable">/* make only the button interactive to avoid accidental opens while scrolling */
+.day{ pointer-events:none; }
+.day button, .day .foot .btn{ pointer-events:auto; }
+</style>
 </head>
 <body>
   <header>
@@ -133,7 +156,7 @@
   <script>
     // ------------ CONFIG & DATA --------------------------------------------
     const EVENT_TITLE = 'Christmas at Grapevine';
-    const APPS_SCRIPT_URL = null; // https://script.google.com/macros/s/AKfycbxgR39hZvDYIgx-3uwpbtQH1_oWjGuNiCfroupqiH4bFRuGHnu5yD9QIQ6GDNUgGy-cmQ/exec
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby0jZYb4eg383ilbyv9xJNPz4R_6r3A7RNMP_LVIxecAl6zC7Vki6W4zVxwgAYXMCE3ZQ/exec';
 
     const SHEET_ROWS = [
       // Nov 2025
@@ -206,7 +229,7 @@
     // Precompute normalized rows
     const ROWS=SHEET_ROWS.map(r=>{ const iso=toISOFromSheetLabel(r.date); const d=parseISO(iso); return { time:r.time, spots:r.spots, date:r.date, weekday:r.weekday, event:(r.event||EVENT_TITLE), iso, datePretty:fmt.format(d), weekdayPretty:fmtWeekday.format(d), closed:String(r.spots||'').toUpperCase().includes('CLOSED') }; });
 
-    function buildCalendar(){ if(ROWS.length){ const first=parseISO(ROWS[0].iso); const last=parseISO(ROWS[ROWS.length-1].iso); rangeLabel.textContent=fmt.format(first)+' – '+fmt.format(last);} calendar.innerHTML=''; for(const row of ROWS){ const card=makeEl('article',{class:'day',tabindex:0,role:'group','aria-label':row.datePretty+', '+row.weekday}); card.addEventListener('click',e=>{e.stopPropagation(); if(!row.closed) openRequest(row.iso);}); card.addEventListener('keydown',e=>{ if((e.key==='Enter'||e.key===' ')&&!row.closed){e.preventDefault(); openRequest(row.iso);} }); card.addEventListener('touchend',e=>{e.preventDefault(); e.stopPropagation(); if(!row.closed) openRequest(row.iso);},{passive:false});
+    function buildCalendar(){ if(ROWS.length){ const first=parseISO(ROWS[0].iso); const last=parseISO(ROWS[ROWS.length-1].iso); rangeLabel.textContent=fmt.format(first)+' – '+fmt.format(last);} calendar.innerHTML=''; for(const row of ROWS){ const card=makeEl('article',{class:'day',role:'group','aria-label':row.datePretty+', '+row.weekday}); card.addEventListener('click',e=>{e.stopPropagation(); if(!row.closed) openRequest(row.iso);}); card.addEventListener('keydown',e=>{ if((e.key==='Enter'||e.key===' ')&&!row.closed){e.preventDefault(); openRequest(row.iso);} }); card.addEventListener('touchend',e=>{e.preventDefault(); e.stopPropagation(); if(!row.closed) openRequest(row.iso);},{passive:false});
       const head=makeEl('div',{class:'head'}, makeEl('div',{}, makeEl('div',{class:'date'},row.datePretty), makeEl('div',{class:'weekday'},row.weekday), makeEl('div',{class:'event'}, row.event) ), row.closed? makeEl('span',{class:'pill closed'},'Closed') : makeEl('span',{class:'pill need'}, row.spots + ' Availability') );
       const meta=makeEl('div',{class:'meta'}, makeEl('span',{class:'pill badge'}, 'Time: '+row.time) );
       const btn=makeEl('button',{class:'btn primary',type:'button'},'Select Day'); btn.disabled=!!row.closed; btn.addEventListener('click',e=>{e.stopPropagation(); if(!btn.disabled) openRequest(row.iso);}); btn.addEventListener('touchend',e=>{e.preventDefault(); e.stopPropagation(); if(!btn.disabled) openRequest(row.iso);},{passive:false});
