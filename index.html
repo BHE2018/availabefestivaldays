@@ -175,17 +175,20 @@
   </div>
 
   <script>
-    // ------------ CONFIG & DATA --------------------------------------------
+    // ------------ CONFIG --------------------------------------------
     const EVENT_TITLE = 'Christmas at Grapevine';
     const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwFUoBoXO4YBd1mYKUg3_lwFYwoQ_rTNYNk-1Ez1rBXy3Dynj6PHLgIwqaGmVJn6aP0/exec';
 
-    
-    // ------------ UTIL -----------------------------------------------------
+    // Live rows come from Apps Script. Start empty so we don't crash.
+    let SHEET_ROWS = [];
+    let ROWS = [];
+
+    // ------------ UTIL ----------------------------------------------
     const fmt = new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
     const fmtWeekday = new Intl.DateTimeFormat(undefined, { weekday: 'long' });
     function parseISO(iso){ return new Date(iso + 'T00:00:00Z'); }
     function toISOFromSheetLabel(label){
-      const [mon,dayStr]=label.trim().split(' ');
+      const [mon,dayStr]=String(label).trim().split(' ');
       const day=parseInt(dayStr,10);
       const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
       const monthIndex=months.indexOf(mon);
@@ -193,7 +196,6 @@
       const d=new Date(Date.UTC(year,monthIndex,day));
       return d.toISOString().slice(0,10);
     }
-
     function makeEl(tag, attrs){
       const el=document.createElement(tag);
       if(attrs){
@@ -209,7 +211,6 @@
       for(let i=2;i<arguments.length;i++){ const kid=arguments[i]; if(kid!=null) el.append(kid); }
       return el;
     }
-
     const STORAGE_KEY='bubblehead_shift_requests_v1';
     const loadSubmissions=()=>{ try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');}catch{return[]} };
     const saveSubmission=(o)=>{ const a=loadSubmissions(); a.push(o); localStorage.setItem(STORAGE_KEY, JSON.stringify(a)); };
@@ -235,7 +236,6 @@
     document.getElementById('exportBtn').addEventListener('click', exportCSV);
     function showToast(m){ toastMsg.textContent=m; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),2800); }
 
-    // ---------- NORMALIZE + LOAD SHEET DATA ----------
     function normalizeRows(rawRows){
       return rawRows.map(r=>{
         const iso=toISOFromSheetLabel(r.date);
@@ -254,34 +254,33 @@
       });
     }
 
-    let ROWS = normalizeRows(SHEET_ROWS);
-
     async function loadScheduleFromSheets(){
       if (!APPS_SCRIPT_URL) return;
       try{
         const res = await fetch(APPS_SCRIPT_URL + '?op=schedule', { method:'GET' });
         if (!res.ok) throw new Error('HTTP '+res.status);
         const json = await res.json();
-        if (json && Array.isArray(json.rows) && json.rows.length){
+        if (json && Array.isArray(json.rows)){
           SHEET_ROWS = json.rows;
           ROWS = normalizeRows(SHEET_ROWS);
         }
       }catch(err){
-        console.warn('Using built-in schedule (fetch failed):', err);
+        console.warn('Schedule fetch failed:', err);
+        ROWS = []; // keep calm and render empty
       }
     }
 
-    // ---------- UI BUILD ----------
     function buildCalendar(){
       if(ROWS.length){
         const first=parseISO(ROWS[0].iso);
         const last=parseISO(ROWS[ROWS.length-1].iso);
         rangeLabel.textContent=fmt.format(first)+' – '+fmt.format(last);
+      } else {
+        rangeLabel.textContent='No dates found';
       }
       calendar.innerHTML='';
       for(const row of ROWS){
         const card=makeEl('article',{class:'day',role:'group','aria-label':row.datePretty+', '+row.weekday});
-        // whole card is not clickable; only the button is (see CSS), but keep handlers safe:
         const head=makeEl('div',{class:'head'},
           makeEl('div',{},
             makeEl('div',{class:'date'},row.datePretty),
@@ -363,4 +362,3 @@
   </script>
 </body>
 </html>
-
