@@ -47,59 +47,51 @@
     .modal-grid{display:grid;gap:10px;grid-template-columns:repeat(2,1fr)}
     .modal-grid.full{grid-template-columns:1fr}
     label{font-size:13px;color:var(--muted);display:block;margin-bottom:6px}
-    input[type=text], textarea{width:100%;padding:8px 10px;border-radius:10px;border:1px solid var(--border);background:#fff;color:var(--text);outline:none;transition:.15s ease;font-size:15px;line-height:1.4;height:auto;min-height:36px} textarea{min-height:60px;max-height:30vh;resize:vertical;}
+    input[type=text], textarea{width:100%;padding:8px 10px;border-radius:10px;border:1px solid var(--border);background:#fff;color:#111827;outline:none;transition:.15s ease;font-size:15px;line-height:1.4;height:auto;min-height:36px}
+    textarea{min-height:60px;max-height:30vh;resize:vertical;}
     input:focus, textarea:focus{box-shadow:0 0 0 4px var(--ring);border-color:#93c5fd}
     textarea{ min-height:96px; max-height:40vh; resize:vertical; }
     .modal-foot{display:flex;gap:10px;padding:14px 16px;border-top:1px solid var(--border);justify-content:flex-end}
     @media (max-width:720px){.wrap{padding:12px 14px}.brand h1{font-size:16px}.calendar{grid-template-columns:1fr;gap:10px}.btn{padding:14px 16px;border-radius:14px}.modal-grid{grid-template-columns:1fr}.day .head{padding:12px}.meta{padding:10px 12px;gap:8px}.foot{padding:10px 12px}.pill{font-size:11px}}
   </style>
-<style id="mobile-modal-fixes">
-/* Modal layout: full-height, scrollable body, sticky actions */
-dialog{
-  border:none; border-radius:16px; padding:0; overflow:hidden;
-  background:#fff; color:#111827; width:min(640px,96vw);
-  max-height:92vh; display:flex; flex-direction:column;
-  box-shadow:0 30px 60px rgba(0,0,0,.12);
-}
-dialog::backdrop{ background:rgba(0,0,0,.35); backdrop-filter:blur(2px); }
-.modal-head{ display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid var(--border); flex:0 0 auto; }
-.modal-body{ padding:16px; display:grid; gap:14px; overflow:auto; -webkit-overflow-scrolling:touch; flex:1 1 auto; padding-bottom: calc(220px + env(safe-area-inset-bottom)); scroll-padding-bottom: calc(220px + env(safe-area-inset-bottom)); }
-.modal-foot{ display:flex; gap:10px; padding:14px 16px; border-top:1px solid var(--border); justify-content:flex-end; background:#fff; position:sticky; bottom:0; flex:0 0 auto; }
-@media (max-width:720px){
-  dialog{ width:100vw; max-width:100vw; height:100dvh; max-height:100dvh; margin:0; border-radius:16px; }
-  .modal-grid{ grid-template-columns:1fr }
-}
-@supports(height: 100dvh){ dialog{ max-height:90dvh; } }
-.modal-foot{ padding-bottom: calc(14px + env(safe-area-inset-bottom)); }
-</style>
-<style id="button-only-selectable">/* make only the button interactive to avoid accidental opens while scrolling */
-.day{ pointer-events:none; }
-.day button, .day .foot .btn{ pointer-events:auto; }
-</style>
-<style id="button-size-and-modal-grid">
-/* Make the day card button half width and left-aligned */
-.day .foot{ justify-content:flex-start; }
-.day .foot .btn{ flex:0 0 48%; }
-/* Two-column grids to surface comments sooner */
-.modal-grid.two{ display:grid; gap:10px; grid-template-columns:repeat(2,1fr); }
-@media (max-width:420px){ .modal-grid.two{ grid-template-columns:1fr; } }
-</style>
-<style id="modal-layout-fix">
-/* Ensure comment box is visible above sticky footer */
-.modal-body{ padding:16px; display:grid; gap:14px; overflow:auto; -webkit-overflow-scrolling:touch; flex:1 1 auto; padding-bottom: calc(220px + env(safe-area-inset-bottom)); scroll-padding-bottom: calc(220px + env(safe-area-inset-bottom)); }
-.modal-grid.two{ display:grid; gap:10px; grid-template-columns:repeat(2,1fr); }
-@media(max-width:480px){ .modal-grid.two{ grid-template-columns:1fr; } }
-.modal-body > *:last-child{ margin-bottom:140px; }
-</style>
-<style id="compact-controls">
-/* denser form controls so Comments fits without scrolling too far */
-.modal-body{ gap:10px; }
-label{ font-size:13px; margin-bottom:4px; }
-input[type=text], textarea{ padding:8px 12px; line-height:1.2; font-size:16px; border-radius:12px; }
-textarea{ min-height:72px; max-height:40vh; resize:vertical; }
-/* keep two columns on most phones; only stack on very small widths */
-@media (max-width:360px){ .modal-grid.two{ grid-template-columns:1fr !important; } }
-</style>
+
+  <!-- mobile modal fixes (kept from your working file) -->
+  <style id="mobile-modal-fixes">
+    dialog{ border:none;border-radius:16px;padding:0;overflow:hidden;background:#fff;color:#111827;width:min(640px,96vw);max-height:92vh;display:flex;flex-direction:column;box-shadow:0 30px 60px rgba(0,0,0,.12) }
+    dialog::backdrop{ background:rgba(0,0,0,.35); backdrop-filter:blur(2px) }
+    .modal-head{ display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid var(--border); flex:0 0 auto }
+    .modal-body{ padding:16px; display:grid; gap:14px; overflow:auto; -webkit-overflow-scrolling:touch; flex:1 1 auto; padding-bottom: calc(220px + env(safe-area-inset-bottom)); scroll-padding-bottom: calc(220px + env(safe-area-inset-bottom)) }
+    .modal-foot{ display:flex; gap:10px; padding:14px 16px; border-top:1px solid var(--border); justify-content:flex-end; background:#fff; position:sticky; bottom:0; flex:0 0 auto; padding-bottom: calc(14px + env(safe-area-inset-bottom)) }
+    @media (max-width:720px){ dialog{ width:100vw; max-width:100vw; height:100dvh; max-height:100dvh; margin:0; border-radius:16px } .modal-grid{ grid-template-columns:1fr } }
+    @supports(height: 100dvh){ dialog{ max-height:90dvh } }
+  </style>
+
+  <!-- keep only the button selectable (from your working file) -->
+  <style id="button-only-selectable">
+    .day{ pointer-events:none; }
+    .day button, .day .foot .btn{ pointer-events:auto; }
+  </style>
+
+  <!-- keep two-column helper and compact controls (from your working file) -->
+  <style id="button-size-and-modal-grid">
+    .day .foot{ justify-content:flex-start }
+    .day .foot .btn{ flex:0 0 48% }
+    .modal-grid.two{ display:grid; gap:10px; grid-template-columns:repeat(2,1fr) }
+    @media (max-width:420px){ .modal-grid.two{ grid-template-columns:1fr } }
+  </style>
+
+  <!-- ensure comments not hidden -->
+  <style id="modal-layout-fix">
+    .modal-body{ padding:16px; display:grid; gap:14px; overflow:auto; -webkit-overflow-scrolling:touch; flex:1 1 auto; padding-bottom: calc(220px + env(safe-area-inset-bottom)); scroll-padding-bottom: calc(220px + env(safe-area-inset-bottom)) }
+    .modal-grid.two{ display:grid; gap:10px; grid-template-columns:repeat(2,1fr) }
+    @media(max-width:480px){ .modal-grid.two{ grid-template-columns:1fr } }
+  </style>
+
+  <!-- NEW: Keep Date + Day side-by-side on phones without increasing height -->
+  <style id="date-day-side-by-side">
+    .modal-grid.two.dd{ grid-template-columns:1fr 1fr !important; }
+    @media (max-width:360px){ .modal-grid.two.dd{ grid-template-columns:1fr !important; } }
+  </style>
 </head>
 <body>
   <header>
@@ -130,7 +122,8 @@ textarea{ min-height:72px; max-height:40vh; resize:vertical; }
         <button type="button" class="btn" id="closeModal" aria-label="Close">✕</button>
       </div>
       <div class="modal-body">
-        <div class="modal-grid two">
+        <!-- Add .dd so this row stays side-by-side on phones -->
+        <div class="modal-grid two dd">
           <div>
             <label>Date</label>
             <input type="text" id="dateDisplay" readonly />
@@ -187,7 +180,6 @@ textarea{ min-height:72px; max-height:40vh; resize:vertical; }
     const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby0jZYb4eg383ilbyv9xJNPz4R_6r3A7RNMP_LVIxecAl6zC7Vki6W4zVxwgAYXMCE3ZQ/exec';
 
     const SHEET_ROWS = [
-      // Nov 2025
       { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Nov 24', weekday: 'MONDAY' },
       { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Nov 25', weekday: 'TUESDAY' },
       { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Nov 26', weekday: 'WEDNESDAY' },
@@ -195,7 +187,6 @@ textarea{ min-height:72px; max-height:40vh; resize:vertical; }
       { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Nov 28', weekday: 'FRIDAY' },
       { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Nov 29', weekday: 'SATURDAY' },
       { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Nov 30', weekday: 'SUNDAY' },
-      // Dec 2025
       { time: '12:30 - 10:30', spots: 'CLOSED',    date: 'Dec 1',  weekday: 'MONDAY' },
       { time: '12:30 - 10:30', spots: 'CLOSED',    date: 'Dec 2',  weekday: 'TUESDAY' },
       { time: '12:30 - 10:30', spots: 'CLOSED',    date: 'Dec 3',  weekday: 'WEDNESDAY' },
@@ -227,7 +218,6 @@ textarea{ min-height:72px; max-height:40vh; resize:vertical; }
       { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Dec 29', weekday: 'MONDAY' },
       { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Dec 30', weekday: 'TUESDAY' },
       { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Dec 31', weekday: 'WEDNESDAY' },
-      // Jan 2026
       { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Jan 1',  weekday: 'THURSDAY' },
       { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Jan 2',  weekday: 'FRIDAY' },
       { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Jan 3',  weekday: 'Saturday' }
