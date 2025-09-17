@@ -261,6 +261,26 @@
 }
 
 
+    // Mark as closed if either Weekday OR Spots column contains "CLOSED"
+    const isClosed =
+      /CLOSED/i.test(String(r.weekday || '')) ||
+      /CLOSED/i.test(String(r.spots   || ''));
+
+    return {
+      time: r.time,
+      spots: r.spots,
+      date: r.date,
+      weekday: r.weekday,
+      event: (r.event || EVENT_TITLE),
+      iso,
+      datePretty: fmt.format(d),
+      weekdayPretty: fmtWeekday.format(d),
+      closed: isClosed
+    };
+  });
+}
+
+
     async function loadScheduleFromSheets(){
       if (!APPS_SCRIPT_URL) return;
       try{
