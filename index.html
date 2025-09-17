@@ -1,4 +1,117 @@
-<div class="modal-body">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Bubblehead — Artist Shift Picker</title>
+  <style>
+    :root { --bg:#f6f7fb; --card:#ffffff; --muted:#6b7280; --text:#111827; --accent:#3b82f6; --accent-2:#60a5fa; --ring:#93c5fd66; --border:#e5e7eb; --shadow:0 8px 24px rgba(17,24,39,.06); }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial;background:var(--bg);color:var(--text);-webkit-tap-highlight-color:transparent}
+
+    header{position:sticky;top:0;z-index:50;backdrop-filter:saturate(140%) blur(6px);background:rgba(255,255,255,.86);border-bottom:1px solid var(--border)}
+    .wrap{max-width:980px;margin:0 auto;padding:16px 20px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand .logo{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent-2),var(--accent));color:#fff;font-weight:900;box-shadow:var(--shadow)}
+    .brand h1{font-size:18px;margin:0;letter-spacing:.2px}
+    .sub{color:var(--muted);font-size:12px;margin-top:2px}
+
+    .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px}
+    .toolbar .range{color:var(--muted);font-size:13px}
+    .toolbar .spacer{flex:1 1 auto}
+    .btn{cursor:pointer;border:1px solid var(--border);background:#fff;color:var(--text);padding:12px 16px;border-radius:12px;font-weight:600;transition:.15s ease;box-shadow:var(--shadow)}
+    .btn:hover{transform:translateY(-1px)}
+    .btn.primary{background:linear-gradient(180deg,#3b82f6,#2563eb);color:#fff;border-color:transparent}
+
+    .calendar{display:grid;gap:12px;margin-top:14px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+    .day{border:1px solid var(--border);border-radius:14px;background:var(--card);position:relative;overflow:clip;transition:.15s ease;box-shadow:var(--shadow);pointer-events:none} /* card not clickable */
+    .day:hover{transform:translateY(-2px)}
+    .day .head{display:flex;align-items:center;justify-content:space-between;padding:14px;border-bottom:1px dashed var(--border)}
+    .date{font-weight:800;letter-spacing:.3px}
+    .weekday{color:var(--muted);font-size:12px}
+    .event{font-size:14px;font-weight:700;color:var(--accent);margin-top:4px}
+    .meta{display:flex;gap:10px;padding:12px 14px;align-items:center;flex-wrap:wrap}
+    .pill{font-size:12px;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:#f9fafb;color:#111827}
+    .pill.badge{background:#f3f4f6}
+    .pill.need{background:#ecfdf5;color:#065f46;border-color:#a7f3d0}
+    .pill.closed{background:#fef2f2;color:#7f1d1d;border-color:#fecaca}
+    .foot{display:flex;gap:8px;padding:12px 14px;border-top:1px dashed var(--border);justify-content:flex-start}
+    .foot .btn{pointer-events:auto; width:48%; min-width:200px; }  /* half width, left aligned */
+
+    .toast{position:fixed;inset-inline:0;top:16px;display:grid;place-items:center;pointer-events:none;z-index:60}
+    .toast .bubble{pointer-events:auto;background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0;box-shadow:var(--shadow);padding:12px 16px;border-radius:12px;opacity:0;transform:translateY(-8px);transition:.25s ease}
+    .toast.show .bubble{opacity:1;transform:translateY(0)}
+
+    /* --- Modal: scrollable body + sticky footer, compact controls --- */
+    dialog{
+      border:none;border-radius:16px;padding:0;overflow:hidden;
+      background:#fff;color:#111827;width:min(640px,96vw);
+      max-height:92vh;display:flex;flex-direction:column;
+      box-shadow:0 30px 60px rgba(0,0,0,.12);
+    }
+    dialog::backdrop{background:rgba(0,0,0,.35);backdrop-filter:blur(2px)}
+    .modal-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);flex:0 0 auto}
+    .modal-body{
+      padding:16px;display:grid;gap:10px;overflow:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto;
+      padding-bottom:calc(220px + env(safe-area-inset-bottom)); /* keep last fields above sticky footer */
+      scroll-padding-bottom:calc(220px + env(safe-area-inset-bottom));
+    }
+    .modal-grid{display:grid;gap:10px;grid-template-columns:1fr}
+    .modal-grid.two{grid-template-columns:repeat(2,1fr)}
+    .modal-grid.full{grid-template-columns:1fr}
+    label{font-size:13px;color:var(--muted);display:block;margin-bottom:4px}
+    input[type=text], textarea{width:100%;padding:8px 12px;border-radius:12px;border:1px solid var(--border);background:#fff;color:var(--text);outline:none;transition:.15s ease;font-size:16px;line-height:1.2}
+    input:focus, textarea:focus{box-shadow:0 0 0 4px var(--ring);border-color:#93c5fd}
+    textarea{min-height:72px;max-height:40vh;resize:vertical}
+    .modal-foot{display:flex;gap:10px;padding:14px 16px;border-top:1px solid var(--border);justify-content:flex-end;background:#fff;position:sticky;bottom:0;flex:0 0 auto;padding-bottom:calc(14px + env(safe-area-inset-bottom))}
+
+    @media (max-width:720px){
+      .wrap{padding:12px 14px}
+      .brand h1{font-size:16px}
+      .calendar{grid-template-columns:1fr;gap:10px}
+      .btn{padding:12px 14px;border-radius:14px}
+      .modal-grid.two{grid-template-columns:1fr 1fr}
+      dialog{width:100vw;max-width:100vw;height:100dvh;max-height:100dvh;margin:0}
+    }
+    @media (max-width:360px){
+      .modal-grid.two{grid-template-columns:1fr} /* very narrow phones */
+    }
+    @supports(height:100dvh){
+      dialog{max-height:90dvh}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">BH</div>
+        <div>
+          <h1>Bubblehead Caricatures — Artist Shift Picker</h1>
+          <div class="sub">Tap a day to request a shift. Submissions are pending approval via text or email.</div>
+        </div>
+      </div>
+      <div class="toolbar">
+        <div class="range" id="rangeLabel">Loading range…</div>
+        <div class="spacer"></div>
+        <button class="btn" id="exportBtn" title="Download your test submissions as CSV">Export CSV</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="calendar" id="calendar" aria-live="polite"></section>
+  </main>
+
+  <!-- Modal -->
+  <dialog id="requestModal" aria-labelledby="modalTitle">
+    <form id="requestForm">
+      <div class="modal-head">
+        <div style="font-weight:800">Request Shift</div>
+        <button type="button" class="btn" id="closeModal" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
         <div class="modal-grid two">
           <div>
             <label>Date</label>
@@ -39,3 +152,214 @@
         </div>
         <input type="hidden" id="dateISO" name="dateISO" />
       </div>
+      <div class="modal-foot">
+        <button type="button" class="btn" id="cancelBtn">Cancel</button>
+        <button type="submit" class="btn primary">Submit Request</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <div class="bubble" id="toastMsg">Received! We’ll confirm via text or email after approval.</div>
+  </div>
+
+  <script>
+    // === CONFIG ===
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby0jZYb4eg383ilbyv9xJNPz4R_6r3A7RNMP_LVIxecAl6zC7Vki6W4zVxwgAYXMCE3ZQ/exec';
+
+    // === HELPERS ===
+    function makeEl(tag, attrs){
+      const el = document.createElement(tag);
+      if (attrs){
+        for (const k in attrs){
+          const v = attrs[k];
+          if (k === 'class') el.className = v;
+          else if (k === 'html') el.innerHTML = v;
+          else if (k === 'disabled') { if (v) el.setAttribute('disabled',''); else el.removeAttribute('disabled'); }
+          else if (k.startsWith('on') && typeof v === 'function') el.addEventListener(k.slice(2).toLowerCase(), v);
+          else el.setAttribute(k, v);
+        }
+      }
+      for (let i=2; i<arguments.length; i++){ const kid = arguments[i]; if (kid != null) el.append(kid); }
+      return el;
+    }
+    const fmt = new Intl.DateTimeFormat(undefined, { month:'short', day:'numeric', year:'numeric' });
+    function parseISO(iso){ return new Date(iso + 'T00:00:00Z'); }
+    function showToast(m){ toastMsg.textContent=m; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'), 2800); }
+
+    // === STATE ===
+    let SHEET_ROWS = []; // from Sheets (JSONP)
+    let ROWS = [];       // normalized
+    let selectedDayISO = null;
+
+    // === DOM ===
+    const calendar = document.getElementById('calendar');
+    const rangeLabel = document.getElementById('rangeLabel');
+    const toast = document.getElementById('toast');
+    const toastMsg = document.getElementById('toastMsg');
+    const modal = document.getElementById('requestModal');
+    const closeModalBtn = document.getElementById('closeModal');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const form = document.getElementById('requestForm');
+    document.getElementById('exportBtn').addEventListener('click', exportCSV);
+
+    // === LOAD SCHEDULE FROM SHEETS (JSONP) ===
+    function loadScheduleFromSheets(){
+      const cbName = 'sched_cb_' + Math.random().toString(36).slice(2);
+      window[cbName] = (payload) => {
+        SHEET_ROWS = (payload && payload.rows) ? payload.rows : [];
+        normalizeRowsAndRender();
+        delete window[cbName];
+      };
+      const s = document.createElement('script');
+      s.src = APPS_SCRIPT_URL + '?fn=schedule&callback=' + cbName;
+      s.onerror = () => { console.error('Schedule load failed'); rangeLabel.textContent = 'Schedule unavailable'; };
+      document.head.appendChild(s);
+    }
+
+    function normalizeRowsAndRender(){
+      // Expect each row: { iso, datePretty, weekday, time, spots, event, closed }
+      ROWS = SHEET_ROWS.map(r => ({
+        iso: r.iso,
+        datePretty: r.datePretty || fmt.format(parseISO(r.iso)),
+        weekday: r.weekday,
+        time: r.time,
+        event: r.event || '',
+        spots: r.spots,
+        closed: !!r.closed
+      }));
+      buildCalendar();
+    }
+
+    function buildCalendar(){
+      if (ROWS.length){
+        const first = parseISO(ROWS[0].iso);
+        const last = parseISO(ROWS[ROWS.length-1].iso);
+        rangeLabel.textContent = fmt.format(first) + ' – ' + fmt.format(last);
+      }
+      calendar.innerHTML = '';
+
+      for (const row of ROWS){
+        const card = makeEl('article', {class:'day'});
+
+        const head = makeEl('div', {class:'head'},
+          makeEl('div', {},
+            makeEl('div', {class:'date'}, row.datePretty),
+            makeEl('div', {class:'weekday'}, row.weekday),
+            makeEl('div', {class:'event'}, row.event)
+          ),
+          row.closed
+            ? makeEl('span', {class:'pill closed'}, 'Closed')
+            : makeEl('span', {class:'pill need'}, (row.spots || '').toUpperCase() + ' Availability')
+        );
+
+        const meta = makeEl('div', {class:'meta'},
+          makeEl('span', {class:'pill badge'}, 'Time: ' + row.time)
+        );
+
+        const btn = makeEl('button', {class:'btn primary', type:'button'}, 'Select Day');
+        btn.disabled = !!row.closed;
+        btn.addEventListener('click', (e)=>{ e.stopPropagation(); if (!btn.disabled) openRequest(row.iso); });
+
+        const foot = makeEl('div', {class:'foot'}, btn);
+
+        card.append(head, meta, foot);
+        card.id = 'day-' + row.iso;
+        calendar.append(card);
+      }
+    }
+
+    // === MODAL ===
+    closeModalBtn.addEventListener('click', ()=> modal.close());
+    cancelBtn.addEventListener('click', ()=> modal.close());
+
+    function getRowByISO(iso){ return ROWS.find(r => r.iso === iso); }
+    function selectDay(iso){
+      if (selectedDayISO){
+        const prev = document.getElementById('day-' + selectedDayISO);
+        if (prev) prev.classList.remove('selected');
+      }
+      selectedDayISO = iso;
+      const cur = document.getElementById('day-' + iso);
+      if (cur) cur.classList.add('selected');
+    }
+
+    function openRequest(iso){
+      selectDay(iso);
+      const row = getRowByISO(iso);
+      const d = parseISO(iso);
+
+      document.getElementById('dateDisplay').value = (row && row.datePretty) ? row.datePretty : fmt.format(d);
+      document.getElementById('weekdayDisplay').value = row ? row.weekday : '';
+      document.getElementById('eventDisplay').value = row ? row.event : '';
+      document.getElementById('hoursDisplay').value = row ? row.time : '';
+      document.getElementById('needDisplay').value = row && row.closed ? 'Closed' : (row ? (row.spots || '').toUpperCase() + ' Availability' : '');
+      document.getElementById('dateISO').value = iso;
+
+      document.getElementById('fullName').value = '';
+      document.getElementById('comments').value = '';
+
+      if (typeof modal.showModal === 'function') modal.showModal();
+    }
+
+    form.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const iso = document.getElementById('dateISO').value;
+      const row = getRowByISO(iso);
+      const data = {
+        dateISO: iso,
+        datePretty: document.getElementById('dateDisplay').value,
+        weekday: document.getElementById('weekdayDisplay').value,
+        event: document.getElementById('eventDisplay').value,
+        hours: document.getElementById('hoursDisplay').value,
+        spots: document.getElementById('needDisplay').value,
+        closed: document.getElementById('needDisplay').value.toUpperCase().includes('CLOSED'),
+        fullName: document.getElementById('fullName').value.trim(),
+        comments: document.getElementById('comments').value.trim(),
+        submittedAt: new Date().toISOString()
+      };
+      if (!data.fullName){ showToast('Please enter your name.'); return; }
+
+      // Local test store (optional backup for offline)
+      saveSubmission(data);
+
+      // Send to Apps Script (fire-and-forget)
+      try {
+        fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+      } catch (err) { console.warn('Apps Script post failed:', err); }
+
+      modal.close();
+      showToast("Thanks! We received your submission. We'll confirm after approval.");
+    });
+
+    // === LOCAL CSV (for testing) ===
+    const STORAGE_KEY = 'bubblehead_shift_requests_v1';
+    function loadSubmissions(){ try { return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]'); } catch { return []; } }
+    function saveSubmission(o){ const a = loadSubmissions(); a.push(o); localStorage.setItem(STORAGE_KEY, JSON.stringify(a)); }
+    function csvEscape(val){ const s = String(val ?? ''); return '"' + s.replace(/"/g,'""').replace(/\r?\n/g,'\\n') + '"'; }
+    function exportCSV(){
+      const rows = loadSubmissions();
+      const headers = ['DateISO','Date Pretty','Weekday','Event Title','Hours','Spots Open','Closed','Full Name','Comments','Submitted At'];
+      const lines = [headers.join(',')];
+      for (const r of rows){
+        const fields = [r.dateISO,r.datePretty,r.weekday,r.event||'',r.hours,r.spots,r.closed,r.fullName,r.comments||'',r.submittedAt];
+        lines.push(fields.map(csvEscape).join(','));
+      }
+      const blob = new Blob([lines.join('\n')], {type:'text/csv'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'bubblehead_shift_requests.csv'; a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // === INIT ===
+    document.addEventListener('DOMContentLoaded', loadScheduleFromSheets);
+  </script>
+</body>
+</html>
