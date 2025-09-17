@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bubblehead — Artist Shift Picker</title>
+  <style>
+    :root { --bg:#f6f7fb; --card:#ffffff; --muted:#6b7280; --text:#111827; --accent:#3b82f6; --accent-2:#60a5fa; --ring:#93c5fd66; --border:#e5e7eb; --shadow:0 8px 24px rgba(17,24,39,.06); }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial;background:var(--bg);color:var(--text);-webkit-tap-highlight-color:transparent}
+    header{position:sticky;top:0;z-index:50;backdrop-filter:saturate(140%) blur(6px);background:rgba(255,255,255,.86);border-bottom:1px solid var(--border)}
+    .wrap{max-width:980px;margin:0 auto;padding:16px 20px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand .logo{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent-2),var(--accent));color:#fff;font-weight:900;box-shadow:var(--shadow)}
+    .brand h1{font-size:18px;margin:0;letter-spacing:.2px}
+    .sub{color:var(--muted);font-size:12px;margin-top:2px}
+    .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px}
+    .toolbar .range{color:var(--muted);font-size:13px}
+    .toolbar .spacer{flex:1 1 auto}
+    .btn{cursor:pointer;border:1px solid var(--border);background:#fff;color:var(--text);padding:12px 16px;border-radius:12px;font-weight:600;transition:.15s ease;box-shadow:var(--shadow)}
+    .btn:hover{transform:translateY(-1px)}
+    .btn.primary{background:linear-gradient(180deg,#3b82f6,#2563eb);color:#fff;border-color:transparent}
+    .calendar{display:grid;gap:12px;margin-top:14px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+    .day{border:1px solid var(--border);border-radius:14px;background:var(--card);position:relative;overflow:clip;transition:.15s ease;box-shadow:var(--shadow)}
+    .day:hover{transform:translateY(-2px)}
+    .day.selected{outline:2px solid var(--ring)}
+    .day .head{display:flex;align-items:center;justify-content:space-between;padding:14px;border-bottom:1px dashed var(--border)}
+    .date{font-weight:800;letter-spacing:.3px}
+    .weekday{color:var(--muted);font-size:12px}
+    .event{font-size:14px;font-weight:700;color:var(--accent);margin-top:4px}
+    .meta{display:flex;gap:10px;padding:12px 14px;align-items:center;flex-wrap:wrap}
+    .pill{font-size:12px;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:#f9fafb;color:#111827}
+    .pill.badge{background:#f3f4f6}
+    .pill.need{background:#ecfdf5;color:#065f46;border-color:#a7f3d0}
+    .pill.closed{background:#fef2f2;color:#7f1d1d;border-color:#fecaca}
+    .foot{display:flex;gap:8px;padding:12px 14px;border-top:1px dashed var(--border)}
+    .foot .btn{flex:1}
+    .foot .btn[disabled]{opacity:.5;cursor:not-allowed;box-shadow:none}
+    .toast{position:fixed;inset-inline:0;top:16px;display:grid;place-items:center;pointer-events:none;z-index:60}
+    .toast .bubble{pointer-events:auto;background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0;box-shadow:var(--shadow);padding:12px 16px;border-radius:12px;opacity:0;transform:translateY(-8px);transition:.25s ease}
+    .toast.show .bubble{opacity:1;transform:translateY(0)}
+    dialog{border:none;border-radius:16px;padding:0;overflow:hidden;background:#fff;color:#text;width:min(640px,96vw);box-shadow:0 30px 60px rgba(0,0,0,.12)}
+    dialog::backdrop{background:rgba(0,0,0,.35);backdrop-filter:blur(2px)}
+    .modal-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border)}
+    .modal-body{padding:16px;display:grid;gap:14px}
+    .modal-grid{display:grid;gap:10px;grid-template-columns:repeat(2,1fr)}
+    .modal-grid.full{grid-template-columns:1fr}
+    label{font-size:13px;color:var(--muted);display:block;margin-bottom:6px}
+    input[type=text], textarea{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:#fff;color:var(--text);outline:none;transition:.15s ease;font-size:16px}
+    input:focus, textarea:focus{box-shadow:0 0 0 4px var(--ring);border-color:#93c5fd}
+    textarea{min-height:96px;resize:vertical}
+    .modal-foot{display:flex;gap:10px;padding:14px 16px;border-top:1px solid var(--border);justify-content:flex-end}
+    @media (max-width:720px){.wrap{padding:12px 14px}.brand h1{font-size:16px}.calendar{grid-template-columns:1fr;gap:10px}.btn{padding:14px 16px;border-radius:14px}.modal-grid{grid-template-columns:1fr}.day .head{padding:12px}.meta{padding:10px 12px;gap:8px}.foot{padding:10px 12px}.pill{font-size:11px}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">BH</div>
+        <div>
+          <h1>Bubblehead Caricatures — Artist Shift Picker</h1>
+          <div class="sub">Tap a day to request a shift. Submissions are pending approval via text or email.</div>
+        </div>
+      </div>
+      <div class="toolbar">
+        <div class="range" id="rangeLabel">Loading range…</div>
+        <div class="spacer"></div>
+        <button class="btn" id="exportBtn" title="Download your test submissions as CSV">Export CSV</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="calendar" id="calendar" aria-live="polite"></section>
+  </main>
+
+  <dialog id="requestModal" aria-labelledby="modalTitle">
+    <form id="requestForm">
+      <div class="modal-head">
+        <div style="font-weight:800">Request Shift</div>
+        <button type="button" class="btn" id="closeModal" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-grid">
+          <div>
+            <label>Date</label>
+            <input type="text" id="dateDisplay" readonly />
+          </div>
+          <div>
+            <label>Day of Week</label>
+            <input type="text" id="weekdayDisplay" readonly />
+          </div>
+          <div>
+            <label>Event</label>
+            <input type="text" id="eventDisplay" readonly />
+          </div>
+          <div>
+            <label>Open Hours</label>
+            <input type="text" id="hoursDisplay" readonly />
+          </div>
+          <div>
+            <label>Artists Needed</label>
+            <input type="text" id="needDisplay" readonly />
+          </div>
+        </div>
+        <div class="modal-grid full">
+          <div>
+            <label for="fullName">Your Name (First & Last) *</label>
+            <input id="fullName" name="fullName" type="text" required placeholder="Jane Doe" />
+          </div>
+        </div>
+        <div class="modal-grid full">
+          <div>
+            <label for="comments">Comments</label>
+            <textarea id="comments" name="comments" placeholder="Anything we should know?"></textarea>
+          </div>
+        </div>
+        <input type="hidden" id="dateISO" name="dateISO" />
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn" id="cancelBtn">Cancel</button>
+        <button type="submit" class="btn primary">Submit Request</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <div class="bubble" id="toastMsg">Received! We’ll confirm via text or email after approval.</div>
+  </div>
+
+  <script>
+    // ------------ CONFIG & DATA --------------------------------------------
+    const EVENT_TITLE = 'Christmas at Grapevine';
+    const APPS_SCRIPT_URL = null; // set to your Apps Script Web App URL when ready
+
+    const SHEET_ROWS = [
+      // Nov 2025
+      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Nov 24', weekday: 'MONDAY' },
+      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Nov 25', weekday: 'TUESDAY' },
+      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Nov 26', weekday: 'WEDNESDAY' },
+      { time: '12:30 - 10:30', spots: 'CLOSED',    date: 'Nov 27', weekday: 'THURSDAY' },
+      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Nov 28', weekday: 'FRIDAY' },
+      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Nov 29', weekday: 'SATURDAY' },
+      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Nov 30', weekday: 'SUNDAY' },
+      // Dec 2025
+      { time: '12:30 - 10:30', spots: 'CLOSED',    date: 'Dec 1',  weekday: 'MONDAY' },
+      { time: '12:30 - 10:30', spots: 'CLOSED',    date: 'Dec 2',  weekday: 'TUESDAY' },
+      { time: '12:30 - 10:30', spots: 'CLOSED',    date: 'Dec 3',  weekday: 'WEDNESDAY' },
+      { time: '12:30 - 10:30', spots: 'CLOSED',    date: 'Dec 4',  weekday: 'THURSDAY' },
+      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Dec 5',  weekday: 'FRIDAY' },
+      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Dec 6',  weekday: 'SATURDAY' },
+      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Dec 7',  weekday: 'SUNDAY' },
+      { time: '12:30 - 10:30', spots: 'CLOSED',    date: 'Dec 8',  weekday: 'MONDAY' },
+      { time: '12:30 - 10:30', spots: 'CLOSED',    date: 'Dec 9',  weekday: 'TUESDAY' },
+      { time: '12:30 - 10:30', spots: 'CLOSED',    date: 'Dec 10', weekday: 'WEDNESDAY' },
+      { time: '12:30 - 10:30', spots: 'CLOSED',    date: 'Dec 11', weekday: 'THURSDAY' },
+      { time: '12:30 - 10:30', spots: '2 ARTIST',  date: 'Dec 12', weekday: 'Friday' },
+      { time: '12:30 - 10:30', spots: '2 ARTIST',  date: 'Dec 13', weekday: 'Saturday' },
+      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Dec 14', weekday: 'Sunday' },
+      { time: '12:30 - 10:30', spots: 'CLOSED',    date: 'Dec 15', weekday: 'Monday' },
+      { time: '12:30 - 10:30', spots: 'CLOSED',    date: 'Dec 16', weekday: 'Tuesday' },
+      { time: '12:30 - 10:30', spots: 'CLOSED',    date: 'Dec 17', weekday: 'Wednesday' },
+      { time: '12:30 - 10:30', spots: 'CLOSED',    date: 'Dec 18', weekday: 'Thursday' },
+      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Dec 19', weekday: 'FRIDAY' },
+      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Dec 20', weekday: 'SATURDAY' },
+      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Dec 21', weekday: 'SUNDAY' },
+      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Dec 22', weekday: 'MONDAY' },
+      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Dec 23', weekday: 'TUESDAY' },
+      { time: '12:30 - 10:30', spots: 'CLOSED',    date: 'Dec 24', weekday: 'WEDNESDAY' },
+      { time: '12:30 - 10:30', spots: 'CLOSED',    date: 'Dec 25', weekday: 'THURSDAY' },
+      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Dec 26', weekday: 'FRIDAY' },
+      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Dec 27', weekday: 'SATURDAY' },
+      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Dec 28', weekday: 'SUNDAY' },
+      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Dec 29', weekday: 'MONDAY' },
+      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Dec 30', weekday: 'TUESDAY' },
+      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Dec 31', weekday: 'WEDNESDAY' },
+      // Jan 2026
+      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Jan 1',  weekday: 'THURSDAY' },
+      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Jan 2',  weekday: 'FRIDAY' },
+      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Jan 3',  weekday: 'Saturday' }
+    ];
+
+    // ------------ UTIL -----------------------------------------------------
+    const fmt = new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+    const fmtWeekday = new Intl.DateTimeFormat(undefined, { weekday: 'long' });
+    function parseISO(iso){ return new Date(iso + 'T00:00:00Z'); }
+    function toISOFromSheetLabel(label){ const [mon,dayStr]=label.trim().split(' '); const day=parseInt(dayStr,10); const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; const monthIndex=months.indexOf(mon); let year=2025; if(monthIndex===0) year=2026; const d=new Date(Date.UTC(year,monthIndex,day)); return d.toISOString().slice(0,10);}    
+
+    function makeEl(tag, attrs){ const el=document.createElement(tag); if(attrs){ for(const k in attrs){ const v=attrs[k]; if(k==='class') el.className=v; else if(k==='html') el.innerHTML=v; else if(k==='disabled'){ if(v) el.setAttribute('disabled',''); else el.removeAttribute('disabled'); } else if(k.startsWith('on') && typeof v==='function'){ el.addEventListener(k.slice(2).toLowerCase(), v);} else el.setAttribute(k,v);} } for(let i=2;i<arguments.length;i++){ const kid=arguments[i]; if(kid!=null) el.append(kid);} return el; }
+
+    const STORAGE_KEY='bubblehead_shift_requests_v1';
+    const loadSubmissions=()=>{ try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');}catch{return[]} };
+    const saveSubmission=(o)=>{ const a=loadSubmissions(); a.push(o); localStorage.setItem(STORAGE_KEY, JSON.stringify(a)); };
+    const csvEscape=(val)=>{ const s=String(val??''); return '"'+s.replace(/"/g,'""').replace(/\r?\n/g,'\\n')+'"'; };
+    function exportCSV(){ const rows=loadSubmissions(); const headers=['DateISO','Date Pretty','Weekday','Event Title','Hours','Spots Open','Closed','Full Name','Comments','Submitted At']; const lines=[headers.join(',')]; for(const r of rows){ const fields=[r.dateISO,r.datePretty,r.weekday,(r.event||''),r.hours,r.spots,r.closed,r.fullName,r.comments||'',r.submittedAt]; lines.push(fields.map(csvEscape).join(',')); } const blob=new Blob([lines.join('\n')],{type:'text/csv'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='bubblehead_shift_requests.csv'; a.click(); URL.revokeObjectURL(url); }
+
+    const calendar=document.getElementById('calendar');
+    const rangeLabel=document.getElementById('rangeLabel');
+    const toast=document.getElementById('toast');
+    const toastMsg=document.getElementById('toastMsg');
+    document.getElementById('exportBtn').addEventListener('click', exportCSV);
+    function showToast(m){ toastMsg.textContent=m; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),2800); }
+
+    // Precompute normalized rows
+    const ROWS=SHEET_ROWS.map(r=>{ const iso=toISOFromSheetLabel(r.date); const d=parseISO(iso); return { time:r.time, spots:r.spots, date:r.date, weekday:r.weekday, event:(r.event||EVENT_TITLE), iso, datePretty:fmt.format(d), weekdayPretty:fmtWeekday.format(d), closed:String(r.spots||'').toUpperCase().includes('CLOSED') }; });
+
+    function buildCalendar(){ if(ROWS.length){ const first=parseISO(ROWS[0].iso); const last=parseISO(ROWS[ROWS.length-1].iso); rangeLabel.textContent=fmt.format(first)+' – '+fmt.format(last);} calendar.innerHTML=''; for(const row of ROWS){ const card=makeEl('article',{class:'day',tabindex:0,role:'group','aria-label':row.datePretty+', '+row.weekday}); card.addEventListener('click',e=>{e.stopPropagation(); if(!row.closed) openRequest(row.iso);}); card.addEventListener('keydown',e=>{ if((e.key==='Enter'||e.key===' ')&&!row.closed){e.preventDefault(); openRequest(row.iso);} }); card.addEventListener('touchend',e=>{e.preventDefault(); e.stopPropagation(); if(!row.closed) openRequest(row.iso);},{passive:false});
+      const head=makeEl('div',{class:'head'}, makeEl('div',{}, makeEl('div',{class:'date'},row.datePretty), makeEl('div',{class:'weekday'},row.weekday), makeEl('div',{class:'event'}, row.event) ), row.closed? makeEl('span',{class:'pill closed'},'Closed') : makeEl('span',{class:'pill need'}, row.spots + ' Availability') );
+      const meta=makeEl('div',{class:'meta'}, makeEl('span',{class:'pill badge'}, 'Time: '+row.time) );
+      const btn=makeEl('button',{class:'btn primary',type:'button'},'Select Day'); btn.disabled=!!row.closed; btn.addEventListener('click',e=>{e.stopPropagation(); if(!btn.disabled) openRequest(row.iso);}); btn.addEventListener('touchend',e=>{e.preventDefault(); e.stopPropagation(); if(!btn.disabled) openRequest(row.iso);},{passive:false});
+      const foot=makeEl('div',{class:'foot'}, btn);
+      card.append(head,meta,foot); card.id='day-'+row.iso; calendar.append(card);} }
+
+    const modal=document.getElementById('requestModal');
+    const closeModalBtn=document.getElementById('closeModal');
+    const cancelBtn=document.getElementById('cancelBtn');
+    const form=document.getElementById('requestForm');
+    closeModalBtn.addEventListener('click',()=>modal.close());
+    cancelBtn.addEventListener('click',()=>modal.close());
+
+    function getRowByISO(iso){ return ROWS.find(r=>r.iso===iso); }
+    function openRequest(iso){ const row=getRowByISO(iso); const d=parseISO(iso); document.getElementById('dateDisplay').value=fmt.format(d); document.getElementById('weekdayDisplay').value=fmtWeekday.format(d); document.getElementById('eventDisplay').value=row?row.event:''; document.getElementById('hoursDisplay').value=row?row.time:''; document.getElementById('needDisplay').value=row&&row.closed?'Closed':(row?row.spots+' Availability':''); document.getElementById('dateISO').value=iso; document.getElementById('fullName').value=''; document.getElementById('comments').value=''; if(typeof modal.showModal==='function') modal.showModal(); }
+
+    form.addEventListener('submit', (e)=>{ e.preventDefault(); const iso=document.getElementById('dateISO').value; const row=getRowByISO(iso); const data={ dateISO:iso, datePretty:document.getElementById('dateDisplay').value, weekday:document.getElementById('weekdayDisplay').value, event: row?.event || EVENT_TITLE, hours:document.getElementById('hoursDisplay').value, spots:document.getElementById('needDisplay').value, closed:document.getElementById('needDisplay').value.includes('Closed'), fullName:document.getElementById('fullName').value.trim(), comments:document.getElementById('comments').value.trim(), submittedAt:new Date().toISOString() };
+      if(!data.fullName){ showToast('Please enter your name.'); return; }
+      saveSubmission(data);
+      if (APPS_SCRIPT_URL){ try{ fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});}catch(err){ console.warn('Apps Script post failed:',err);} }
+      modal.close(); showToast("Thanks! We received your submission. We'll confirm after approval."); });
+
+    buildCalendar();
+  </script>
+</body>
+</html>
