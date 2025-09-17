@@ -179,51 +179,7 @@
     const EVENT_TITLE = 'Christmas at Grapevine';
     const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwFUoBoXO4YBd1mYKUg3_lwFYwoQ_rTNYNk-1Ez1rBXy3Dynj6PHLgIwqaGmVJn6aP0/exec';
 
-    // NOTE: let (not const) so we can replace with live data from Sheets
-    let SHEET_ROWS = [
-      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Nov 24', weekday: 'MONDAY' },
-      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Nov 25', weekday: 'TUESDAY' },
-      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Nov 26', weekday: 'WEDNESDAY' },
-      { time: '12:30 - 10:30', spots: 'CLOSED',    date: 'Nov 27', weekday: 'THURSDAY' },
-      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Nov 28', weekday: 'FRIDAY' },
-      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Nov 29', weekday: 'SATURDAY' },
-      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Nov 30', weekday: 'SUNDAY' },
-      { time: '12:30 - 10:30', spots: 'CLOSED',    date: 'Dec 1',  weekday: 'MONDAY' },
-      { time: '12:30 - 10:30', spots: 'CLOSED',    date: 'Dec 2',  weekday: 'TUESDAY' },
-      { time: '12:30 - 10:30', spots: 'CLOSED',    date: 'Dec 3',  weekday: 'WEDNESDAY' },
-      { time: '12:30 - 10:30', spots: 'CLOSED',    date: 'Dec 4',  weekday: 'THURSDAY' },
-      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Dec 5',  weekday: 'FRIDAY' },
-      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Dec 6',  weekday: 'SATURDAY' },
-      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Dec 7',  weekday: 'SUNDAY' },
-      { time: '12:30 - 10:30', spots: 'CLOSED',    date: 'Dec 8',  weekday: 'MONDAY' },
-      { time: '12:30 - 10:30', spots: 'CLOSED',    date: 'Dec 9',  weekday: 'TUESDAY' },
-      { time: '12:30 - 10:30', spots: 'CLOSED',    date: 'Dec 10', weekday: 'WEDNESDAY' },
-      { time: '12:30 - 10:30', spots: 'CLOSED',    date: 'Dec 11', weekday: 'THURSDAY' },
-      { time: '12:30 - 10:30', spots: '2 ARTIST',  date: 'Dec 12', weekday: 'Friday' },
-      { time: '12:30 - 10:30', spots: '2 ARTIST',  date: 'Dec 13', weekday: 'Saturday' },
-      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Dec 14', weekday: 'Sunday' },
-      { time: '12:30 - 10:30', spots: 'CLOSED',    date: 'Dec 15', weekday: 'Monday' },
-      { time: '12:30 - 10:30', spots: 'CLOSED',    date: 'Dec 16', weekday: 'Tuesday' },
-      { time: '12:30 - 10:30', spots: 'CLOSED',    date: 'Dec 17', weekday: 'Wednesday' },
-      { time: '12:30 - 10:30', spots: 'CLOSED',    date: 'Dec 18', weekday: 'Thursday' },
-      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Dec 19', weekday: 'FRIDAY' },
-      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Dec 20', weekday: 'SATURDAY' },
-      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Dec 21', weekday: 'SUNDAY' },
-      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Dec 22', weekday: 'MONDAY' },
-      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Dec 23', weekday: 'TUESDAY' },
-      { time: '12:30 - 10:30', spots: 'CLOSED',    date: 'Dec 24', weekday: 'WEDNESDAY' },
-      { time: '12:30 - 10:30', spots: 'CLOSED',    date: 'Dec 25', weekday: 'THURSDAY' },
-      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Dec 26', weekday: 'FRIDAY' },
-      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Dec 27', weekday: 'SATURDAY' },
-      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Dec 28', weekday: 'SUNDAY' },
-      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Dec 29', weekday: 'MONDAY' },
-      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Dec 30', weekday: 'TUESDAY' },
-      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Dec 31', weekday: 'WEDNESDAY' },
-      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Jan 1',  weekday: 'THURSDAY' },
-      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Jan 2',  weekday: 'FRIDAY' },
-      { time: '12:30 - 10:30', spots: '2 ARTISTS', date: 'Jan 3',  weekday: 'Saturday' }
-    ];
-
+    
     // ------------ UTIL -----------------------------------------------------
     const fmt = new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
     const fmtWeekday = new Intl.DateTimeFormat(undefined, { weekday: 'long' });
