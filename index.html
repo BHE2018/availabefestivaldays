@@ -158,7 +158,7 @@
             <input type="text" id="hoursDisplay" readonly />
           </div>
           <div>
-            <label>Artists Needed</label>
+            <label>Expected Crowd</label>
             <input type="text" id="needDisplay" readonly />
           </div>
         </div>
@@ -275,7 +275,7 @@ const isClosed =
   /CLOSED/i.test(crowd);
         return {
           time: r.time,
-          spots: r.spots,
+          crowd: crowd,
           date: r.date,
           weekday: r.weekday,
           event: (r.event || EVENT_TITLE),
@@ -321,8 +321,10 @@ const isClosed =
             makeEl('div',{class:'event'}, row.event)
           ),
           row.closed
-            ? makeEl('span',{class:'pill closed'},'Closed')
-            : makeEl('span',{class:'pill need'}, row.spots + ' Availability')
+  ? makeEl('span',{class:'pill closed'},'Closed')
+  : /strong/i.test(row.crowd)
+      ? makeEl('span',{class:'pill strong'},'🔥 Strong Traffic')
+      : makeEl('span',{class:'pill steady'},'Steady Traffic')
         );
         const meta=makeEl('div',{class:'meta'},
           makeEl('span',{class:'pill badge'}, 'Time: '+row.time)
@@ -353,7 +355,8 @@ const isClosed =
       document.getElementById('weekdayDisplay').value=fmtWeekday.format(d);
       document.getElementById('eventDisplay').value=row?row.event:'';
       document.getElementById('hoursDisplay').value=row?row.time:'';
-      document.getElementById('needDisplay').value=row&&row.closed?'Closed':(row?row.spots+' Availability':'');
+      document.getElementById('needDisplay').value =
+  row && row.closed ? 'Closed' : (row ? row.crowd : '');
       document.getElementById('dateISO').value=iso;
       document.getElementById('fullName').value='';
       document.getElementById('comments').value='';
