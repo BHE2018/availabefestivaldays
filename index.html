@@ -268,10 +268,11 @@
         const d = parseISO(iso);
 
         // CLOSED if it appears in either Weekday or Spots (case-insensitive)
-        const isClosed =
-          /CLOSED/i.test(String(r.weekday || '')) ||
-          /CLOSED/i.test(String(r.spots   || ''));
+        cconst crowd = String(r.crowd || r.spots || '').trim();
 
+const isClosed =
+  /CLOSED/i.test(String(r.weekday || '')) ||
+  /CLOSED/i.test(crowd);
         return {
           time: r.time,
           spots: r.spots,
