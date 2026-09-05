@@ -11,7 +11,7 @@
   >
 
   <title>
-    Bubblehead — Artist Shift Picker
+    Bubble Head — Christmas Artist Schedule
   </title>
 
 
@@ -23,7 +23,7 @@
       --muted:#6b7280;
       --text:#111827;
       --accent:#3b82f6;
-      --accent-2:#60a5fa;
+      --accent-dark:#2563eb;
       --ring:#93c5fd66;
       --border:#e5e7eb;
       --shadow:0 8px 24px rgba(17,24,39,.06);
@@ -75,7 +75,7 @@
         blur(6px);
 
       background:
-        rgba(255,255,255,.86);
+        rgba(255,255,255,.92);
 
       border-bottom:
         1px solid var(--border);
@@ -97,8 +97,10 @@
 
 
     .logo {
-      width:40px;
-      height:40px;
+      width:42px;
+      height:42px;
+
+      flex:0 0 42px;
 
       border-radius:12px;
 
@@ -108,8 +110,8 @@
       background:
         linear-gradient(
           135deg,
-          var(--accent-2),
-          var(--accent)
+          #60a5fa,
+          #2563eb
         );
 
       color:#fff;
@@ -131,16 +133,14 @@
         var(--muted);
 
       font-size:12px;
+      line-height:1.45;
 
-      margin-top:2px;
+      margin-top:3px;
     }
 
 
     .toolbar {
       display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-
       align-items:center;
 
       margin-top:10px;
@@ -152,60 +152,26 @@
         var(--muted);
 
       font-size:13px;
+      font-weight:600;
     }
 
 
-    .spacer {
-      flex:1 1 auto;
-    }
+    .notice {
+      margin-top:14px;
 
-
-    .btn {
-      cursor:pointer;
+      background:#eff6ff;
 
       border:
-        1px solid var(--border);
+        1px solid #bfdbfe;
 
-      background:#fff;
-      color:#111827;
+      border-radius:14px;
 
-      padding:
-        12px 16px;
+      padding:12px 14px;
 
-      border-radius:12px;
+      color:#1e3a8a;
 
-      font-weight:600;
-
-      transition:
-        .15s ease;
-
-      box-shadow:
-        var(--shadow);
-    }
-
-
-    .btn:hover {
-      transform:
-        translateY(-1px);
-    }
-
-
-    .btn.primary {
-      background:
-        linear-gradient(
-          180deg,
-          #3b82f6,
-          #2563eb
-        );
-
-      color:#fff;
-      border-color:transparent;
-    }
-
-
-    .btn[disabled] {
-      opacity:.5;
-      cursor:not-allowed;
+      font-size:13px;
+      line-height:1.45;
     }
 
 
@@ -236,7 +202,8 @@
       overflow:hidden;
 
       transition:
-        .15s ease;
+        transform .15s ease,
+        box-shadow .15s ease;
 
       box-shadow:
         var(--shadow);
@@ -252,7 +219,7 @@
     .day .head {
       display:flex;
 
-      align-items:center;
+      align-items:flex-start;
 
       justify-content:
         space-between;
@@ -268,7 +235,7 @@
 
     .date {
       font-weight:800;
-      letter-spacing:.3px;
+      letter-spacing:.2px;
     }
 
 
@@ -277,23 +244,29 @@
         var(--muted);
 
       font-size:12px;
+
+      margin-top:2px;
     }
 
 
     .event {
       font-size:14px;
-      font-weight:700;
 
-      color:#3b82f6;
+      font-weight:800;
 
-      margin-top:4px;
+      color:
+        var(--accent-dark);
+
+      margin-top:6px;
+
+      line-height:1.35;
     }
 
 
     .meta {
       display:flex;
 
-      gap:10px;
+      gap:8px;
 
       padding:
         12px 14px;
@@ -318,11 +291,6 @@
       background:#f9fafb;
 
       color:#111827;
-    }
-
-
-    .pill.badge {
-      background:#f3f4f6;
     }
 
 
@@ -354,14 +322,19 @@
       background:#eff6ff;
       color:#1d4ed8;
       border-color:#bfdbfe;
+      font-weight:800;
+    }
+
+
+    .pill.no-shifts {
+      background:#f3f4f6;
+      color:#6b7280;
       font-weight:700;
     }
 
 
     .foot {
       display:flex;
-
-      gap:8px;
 
       padding:
         12px 14px;
@@ -371,12 +344,57 @@
     }
 
 
-    .foot .btn {
-      flex:
-        0 0 48%;
+    .btn {
+      cursor:pointer;
 
-      max-width:
-        48%;
+      border:
+        1px solid var(--border);
+
+      background:#fff;
+      color:#111827;
+
+      padding:
+        12px 16px;
+
+      border-radius:12px;
+
+      font-weight:700;
+
+      transition:
+        .15s ease;
+    }
+
+
+    .btn.primary {
+      background:
+        linear-gradient(
+          180deg,
+          var(--accent),
+          var(--accent-dark)
+        );
+
+      color:#fff;
+      border-color:transparent;
+
+      box-shadow:
+        0 5px 14px rgba(37,99,235,.2);
+    }
+
+
+    .foot .btn {
+      width:100%;
+    }
+
+
+    .btn:hover:not([disabled]) {
+      transform:
+        translateY(-1px);
+    }
+
+
+    .btn[disabled] {
+      opacity:.45;
+      cursor:not-allowed;
     }
 
 
@@ -391,12 +409,15 @@
 
       pointer-events:none;
 
-      z-index:60;
+      z-index:100;
     }
 
 
     .toast .bubble {
       pointer-events:auto;
+
+      max-width:
+        min(92vw,560px);
 
       background:#ecfdf5;
       color:#065f46;
@@ -419,6 +440,15 @@
 
       transition:
         .25s ease;
+
+      text-align:center;
+    }
+
+
+    .toast.error .bubble {
+      background:#fef2f2;
+      color:#991b1b;
+      border-color:#fecaca;
     }
 
 
@@ -448,7 +478,7 @@
         90dvh;
 
       box-shadow:
-        0 30px 60px rgba(0,0,0,.12);
+        0 30px 60px rgba(0,0,0,.14);
     }
 
 
@@ -465,7 +495,7 @@
 
     dialog::backdrop {
       background:
-        rgba(0,0,0,.35);
+        rgba(0,0,0,.4);
 
       backdrop-filter:
         blur(2px);
@@ -480,11 +510,31 @@
       justify-content:
         space-between;
 
+      gap:10px;
+
       padding:
         14px 16px;
 
       border-bottom:
         1px solid var(--border);
+
+      flex:0 0 auto;
+    }
+
+
+    .modal-title {
+      font-weight:900;
+      font-size:18px;
+    }
+
+
+    .modal-sub {
+      color:
+        var(--muted);
+
+      font-size:12px;
+
+      margin-top:2px;
     }
 
 
@@ -517,6 +567,14 @@
         flex-end;
 
       background:#fff;
+
+      flex:0 0 auto;
+
+      padding-bottom:
+        calc(
+          14px +
+          env(safe-area-inset-bottom)
+        );
     }
 
 
@@ -536,12 +594,6 @@
     }
 
 
-    .modal-grid.dd {
-      grid-template-columns:
-        1fr 1fr;
-    }
-
-
     label {
       font-size:13px;
 
@@ -551,6 +603,8 @@
       display:block;
 
       margin-bottom:6px;
+
+      font-weight:600;
     }
 
 
@@ -561,7 +615,7 @@
       width:100%;
 
       padding:
-        9px 10px;
+        10px 11px;
 
       border-radius:10px;
 
@@ -580,8 +634,13 @@
     }
 
 
+    input[readonly] {
+      background:#f9fafb;
+    }
+
+
     select {
-      min-height:42px;
+      min-height:44px;
     }
 
 
@@ -591,13 +650,13 @@
 
 
     input[type=text] {
-      min-height:38px;
+      min-height:40px;
     }
 
 
     textarea {
-      min-height:96px;
-      max-height:40vh;
+      min-height:90px;
+      max-height:35vh;
       resize:vertical;
     }
 
@@ -613,11 +672,48 @@
     }
 
 
+    .required-note {
+      font-size:11px;
+      color:#9ca3af;
+      margin-top:5px;
+    }
+
+
+    .loading {
+      padding:36px 20px;
+      text-align:center;
+      color:var(--muted);
+    }
+
+
+    .empty-state {
+      grid-column:1 / -1;
+
+      padding:40px 20px;
+
+      background:#fff;
+
+      border:
+        1px solid var(--border);
+
+      border-radius:14px;
+
+      text-align:center;
+
+      color:var(--muted);
+    }
+
+
     @media (max-width:720px) {
 
       .wrap {
         padding:
           12px 14px;
+      }
+
+
+      .brand {
+        align-items:flex-start;
       }
 
 
@@ -655,17 +751,7 @@
       }
 
 
-      .modal-grid:not(.dd) {
-        grid-template-columns:
-          1fr;
-      }
-
-    }
-
-
-    @media (max-width:360px) {
-
-      .modal-grid.dd {
+      .modal-grid {
         grid-template-columns:
           1fr;
       }
@@ -696,11 +782,12 @@
       <div>
 
         <h1>
-          Bubblehead Caricatures — Artist Shift Picker
+          Bubble Head Caricatures — Christmas Artist Schedule
         </h1>
 
         <div class="sub">
-          Select a day and shift to submit a request.
+          View available Christmas opportunities,
+          choose an event and shift, and submit your request.
           All requests are pending approval.
         </div>
 
@@ -715,19 +802,16 @@
         class="range"
         id="rangeLabel"
       >
-        Loading range…
+        Loading schedule…
       </div>
 
-      <div class="spacer"></div>
+    </div>
 
-      <button
-        class="btn"
-        id="exportBtn"
-        type="button"
-      >
-        Export CSV
-      </button>
 
+    <div class="notice">
+      🎄 Opportunities may be available at multiple Christmas
+      events and locations. Additional dates and events may be
+      added throughout the season, so check back for updates.
     </div>
 
   </div>
@@ -742,7 +826,13 @@
     class="calendar"
     id="calendar"
     aria-live="polite"
-  ></section>
+  >
+
+    <div class="loading">
+      Loading available Christmas shifts…
+    </div>
+
+  </section>
 
 </main>
 
@@ -757,17 +847,27 @@
 
     <div class="modal-head">
 
-      <div
-        id="modalTitle"
-        style="font-weight:800"
-      >
-        Request Shift
+      <div>
+
+        <div
+          class="modal-title"
+          id="modalTitle"
+        >
+          Request a Shift
+        </div>
+
+        <div class="modal-sub">
+          Select the shift you would like to request.
+        </div>
+
       </div>
+
 
       <button
         type="button"
         class="btn"
         id="closeModal"
+        aria-label="Close"
       >
         ✕
       </button>
@@ -778,7 +878,7 @@
     <div class="modal-body">
 
 
-      <div class="modal-grid dd">
+      <div class="modal-grid">
 
         <div>
 
@@ -798,7 +898,7 @@
         <div>
 
           <label>
-            Day of Week
+            Day
           </label>
 
           <input
@@ -817,7 +917,7 @@
         <div>
 
           <label>
-            Event
+            Event / Location
           </label>
 
           <input
@@ -855,6 +955,10 @@
 
           </select>
 
+          <div class="required-note">
+            A shift must be selected before submitting.
+          </div>
+
         </div>
 
 
@@ -880,7 +984,7 @@
         <div>
 
           <label>
-            Selected Hours
+            Shift Hours
           </label>
 
           <input
@@ -906,6 +1010,7 @@
           <input
             id="fullName"
             type="text"
+            autocomplete="name"
             required
             placeholder="Jane Doe"
           >
@@ -925,7 +1030,7 @@
 
           <textarea
             id="comments"
-            placeholder="Anything we should know?"
+            placeholder="Scheduling restrictions or anything else we should know?"
           ></textarea>
 
         </div>
@@ -935,7 +1040,7 @@
 
       <input
         type="hidden"
-        id="dateISO"
+        id="scheduleKey"
       >
 
     </div>
@@ -954,6 +1059,7 @@
       <button
         type="submit"
         class="btn primary"
+        id="submitBtn"
       >
         Submit Request
       </button>
@@ -976,9 +1082,7 @@
   <div
     class="bubble"
     id="toastMsg"
-  >
-    Received!
-  </div>
+  ></div>
 
 </div>
 
@@ -989,15 +1093,14 @@
 
 /***** CONFIG *****/
 
-const EVENT_TITLE =
-  'Christmas at Grapevine';
+const DEFAULT_EVENT_TITLE =
+  'Bubble Head Christmas Event';
 
 
 const APPS_SCRIPT_URL =
-  'https://script.google.com/macros/s/AKfycbxA6MBDUsGlmQXx1Uf429UDcq5sQhTF7b5NzlPbBZ0aoSYDyuq-92-BdyLna5eUUN42Pg/exec';
+  'https://script.google.com/macros/s/AKfycbz54PdhWskUxVasJDZRaf04g7D665ARwfnkW4J0Cic4Ys00zeLZPbjFH4uaBXqDSAE70A/exec';
 
 
-let SHEET_ROWS = [];
 let ROWS = [];
 
 
@@ -1042,7 +1145,7 @@ function parseISO(iso) {
 
 
 
-/***** DOM HELPER *****/
+/***** DOM HELPERS *****/
 
 function makeEl(
   tag,
@@ -1056,28 +1159,28 @@ function makeEl(
 
   if (attrs) {
 
-    for (const k in attrs) {
+    for (
+      const [key,value]
+      of Object.entries(attrs)
+    ) {
 
-      const v =
-        attrs[k];
+      if (key === 'class') {
 
-
-      if (k === 'class') {
-
-        el.className = v;
+        el.className =
+          value;
 
       } else if (
-        k === 'disabled'
+        key === 'disabled'
       ) {
 
         el.disabled =
-          !!v;
+          !!value;
 
       } else {
 
         el.setAttribute(
-          k,
-          v
+          key,
+          value
         );
 
       }
@@ -1087,7 +1190,10 @@ function makeEl(
   }
 
 
-  for (const child of children) {
+  for (
+    const child
+    of children
+  ) {
 
     if (
       child !== null &&
@@ -1102,181 +1208,6 @@ function makeEl(
 
 
   return el;
-
-}
-
-
-
-/***** LOCAL HISTORY *****/
-
-const STORAGE_KEY =
-  'bubblehead_shift_requests_2026_v2';
-
-
-function loadSubmissions() {
-
-  try {
-
-    return JSON.parse(
-      localStorage.getItem(
-        STORAGE_KEY
-      ) || '[]'
-    );
-
-  } catch {
-
-    return [];
-
-  }
-
-}
-
-
-function saveSubmission(o) {
-
-  const rows =
-    loadSubmissions();
-
-  rows.push(o);
-
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(rows)
-  );
-
-}
-
-
-function csvEscape(val) {
-
-  const s =
-    String(
-      val ?? ''
-    );
-
-  return '"' +
-    s
-      .replace(/"/g,'""')
-      .replace(/\r?\n/g,'\\n') +
-    '"';
-
-}
-
-
-function exportCSV() {
-
-  const rows =
-    loadSubmissions();
-
-
-  const headers = [
-
-    'DateISO',
-
-    'Date Pretty',
-
-    'Weekday',
-
-    'Event Title',
-
-    'Selected Shift',
-
-    'Hours',
-
-    'Expected Crowd',
-
-    'Closed',
-
-    'Full Name',
-
-    'Comments',
-
-    'Submitted At'
-
-  ];
-
-
-  const lines = [
-    headers.join(',')
-  ];
-
-
-  for (
-    const r of rows
-  ) {
-
-    const fields = [
-
-      r.dateISO,
-
-      r.datePretty,
-
-      r.weekday,
-
-      r.event || '',
-
-      r.shift || '',
-
-      r.hours || '',
-
-      r.crowd || '',
-
-      r.closed,
-
-      r.fullName,
-
-      r.comments || '',
-
-      r.submittedAt
-
-    ];
-
-
-    lines.push(
-      fields
-        .map(csvEscape)
-        .join(',')
-    );
-
-  }
-
-
-  const blob =
-    new Blob(
-      [lines.join('\n')],
-      {
-        type:'text/csv'
-      }
-    );
-
-
-  const url =
-    URL.createObjectURL(
-      blob
-    );
-
-
-  const a =
-    document.createElement(
-      'a'
-    );
-
-
-  a.href =
-    url;
-
-
-  a.download =
-    'bubblehead_shift_requests_2026.csv';
-
-
-  a.click();
-
-
-  URL.revokeObjectURL(
-    url
-  );
-
 }
 
 
@@ -1307,20 +1238,54 @@ const toastMsg =
   );
 
 
-document
-  .getElementById(
-    'exportBtn'
-  )
-  .addEventListener(
-    'click',
-    exportCSV
+const modal =
+  document.getElementById(
+    'requestModal'
   );
 
 
-function showToast(message) {
+const form =
+  document.getElementById(
+    'requestForm'
+  );
+
+
+const shiftSelect =
+  document.getElementById(
+    'shiftSelect'
+  );
+
+
+const submitBtn =
+  document.getElementById(
+    'submitBtn'
+  );
+
+
+
+/***** TOAST *****/
+
+let toastTimer;
+
+
+function showToast(
+  message,
+  type = 'success'
+) {
+
+  clearTimeout(
+    toastTimer
+  );
+
 
   toastMsg.textContent =
     message;
+
+
+  toast.classList.toggle(
+    'error',
+    type === 'error'
+  );
 
 
   toast.classList.add(
@@ -1328,13 +1293,17 @@ function showToast(message) {
   );
 
 
-  setTimeout(
-    () =>
-      toast.classList.remove(
-        'show'
-      ),
-    2800
-  );
+  toastTimer =
+    setTimeout(
+      () => {
+
+        toast.classList.remove(
+          'show'
+        );
+
+      },
+      3500
+    );
 
 }
 
@@ -1355,7 +1324,16 @@ function normalizeRows(
         ).trim();
 
 
-      if (!iso) {
+      const scheduleKey =
+        String(
+          r.scheduleKey || ''
+        ).trim();
+
+
+      if (
+        !iso ||
+        !scheduleKey
+      ) {
         return null;
       }
 
@@ -1370,21 +1348,22 @@ function normalizeRows(
         ).trim();
 
 
+      const event =
+        String(
+          r.event ||
+          DEFAULT_EVENT_TITLE
+        ).trim();
+
+
       let shifts =
         Array.isArray(r.shifts)
           ? r.shifts
           : [];
 
 
-      /*
-       * Backup compatibility:
-       * build shifts manually if an
-       * older backend does not return
-       * the shifts array.
-       */
-      if (
-        !shifts.length
-      ) {
+      /***** FALLBACK SHIFT BUILD *****/
+
+      if (!shifts.length) {
 
         shifts = [];
 
@@ -1396,6 +1375,7 @@ function normalizeRows(
             label:'1st Shift',
             hours:
               String(r.shift1)
+                .trim()
           });
 
         }
@@ -1408,6 +1388,7 @@ function normalizeRows(
             label:'2nd Shift',
             hours:
               String(r.shift2)
+                .trim()
           });
 
         }
@@ -1420,11 +1401,22 @@ function normalizeRows(
             label:'3rd Shift',
             hours:
               String(r.shift3)
+                .trim()
           });
 
         }
 
       }
+
+
+      shifts =
+        shifts
+          .filter(
+            shift =>
+              shift &&
+              shift.id &&
+              shift.hours
+          );
 
 
       const isClosed =
@@ -1434,6 +1426,9 @@ function normalizeRows(
 
       return {
 
+        scheduleKey:
+          scheduleKey,
+
         crowd:
           crowd,
 
@@ -1441,8 +1436,7 @@ function normalizeRows(
           shifts,
 
         event:
-          r.event ||
-          EVENT_TITLE,
+          event,
 
         iso:
           iso,
@@ -1459,7 +1453,29 @@ function normalizeRows(
       };
 
     })
-    .filter(Boolean);
+
+    .filter(Boolean)
+
+    .sort(
+      (a,b) => {
+
+        const dateCompare =
+          a.iso.localeCompare(
+            b.iso
+          );
+
+
+        if (dateCompare !== 0) {
+          return dateCompare;
+        }
+
+
+        return a.event.localeCompare(
+          b.event
+        );
+
+      }
+    );
 
 }
 
@@ -1468,11 +1484,6 @@ function normalizeRows(
 /***** LOAD SCHEDULE *****/
 
 async function loadScheduleFromSheets() {
-
-  if (!APPS_SCRIPT_URL) {
-    return;
-  }
-
 
   try {
 
@@ -1497,44 +1508,60 @@ async function loadScheduleFromSheets() {
       await res.json();
 
 
-    if (
-      json &&
-      Array.isArray(
-        json.rows
-      )
-    ) {
-
-      SHEET_ROWS =
-        json.rows;
-
-
-      ROWS =
-        normalizeRows(
-          SHEET_ROWS
-        );
-
-    }
-
-
     if (json.error) {
 
-      console.warn(
-        'Apps Script:',
+      throw new Error(
         json.error
       );
 
     }
 
 
+    if (
+      !json ||
+      !Array.isArray(json.rows)
+    ) {
+
+      throw new Error(
+        'Invalid schedule response.'
+      );
+
+    }
+
+
+    ROWS =
+      normalizeRows(
+        json.rows
+      );
+
+
   } catch (err) {
 
-    console.warn(
-      'Schedule fetch failed:',
+    console.error(
+      'Schedule load failed:',
       err
     );
 
 
     ROWS = [];
+
+
+    rangeLabel.textContent =
+      'Schedule unavailable';
+
+
+    calendar.innerHTML = '';
+
+
+    calendar.append(
+      makeEl(
+        'div',
+        {
+          class:'empty-state'
+        },
+        'We were unable to load the Christmas schedule. Please refresh the page or try again shortly.'
+      )
+    );
 
   }
 
@@ -1598,7 +1625,7 @@ function buildCrowdBadge(
   return makeEl(
     'span',
     {
-      class:'pill badge'
+      class:'pill'
     },
     row.crowd ||
     'Crowd TBD'
@@ -1612,38 +1639,47 @@ function buildCrowdBadge(
 
 function buildCalendar() {
 
-
-  if (ROWS.length) {
-
-    const dates =
-      ROWS
-        .map(r =>
-          parseISO(r.iso)
-        )
-        .sort(
-          (a,b) =>
-            a - b
-        );
-
+  if (!ROWS.length) {
 
     rangeLabel.textContent =
-      fmt.format(
-        dates[0]
-      ) +
-      ' – ' +
-      fmt.format(
-        dates[
-          dates.length - 1
-        ]
-      );
+      'No dates currently available';
 
 
-  } else {
+    calendar.innerHTML = '';
 
-    rangeLabel.textContent =
-      'No dates found';
 
+    calendar.append(
+      makeEl(
+        'div',
+        {
+          class:'empty-state'
+        },
+        'No Christmas shifts are currently available. Please check back for newly added opportunities.'
+      )
+    );
+
+
+    return;
   }
+
+
+  const dates =
+    ROWS.map(
+      r =>
+        parseISO(r.iso)
+    );
+
+
+  rangeLabel.textContent =
+    fmt.format(
+      dates[0]
+    ) +
+    ' – ' +
+    fmt.format(
+      dates[
+        dates.length - 1
+      ]
+    );
 
 
   calendar.innerHTML = '';
@@ -1663,6 +1699,8 @@ function buildCalendar() {
           role:'group',
 
           'aria-label':
+            row.event +
+            ', ' +
             row.datePretty +
             ', ' +
             row.weekdayPretty
@@ -1698,7 +1736,6 @@ function buildCalendar() {
           },
           row.event
         )
-
       );
 
 
@@ -1731,13 +1768,6 @@ function buildCalendar() {
       row.shifts.length
     ) {
 
-      const shiftText =
-        row.shifts.length === 1
-          ? '1 Shift Available'
-          : row.shifts.length +
-            ' Shifts Available';
-
-
       meta.append(
         makeEl(
           'span',
@@ -1745,7 +1775,10 @@ function buildCalendar() {
             class:
               'pill shift-count'
           },
-          shiftText
+
+          row.shifts.length === 1
+            ? '1 Shift Available'
+            : `${row.shifts.length} Shifts Available`
         )
       );
 
@@ -1761,7 +1794,8 @@ function buildCalendar() {
         makeEl(
           'span',
           {
-            class:'pill badge'
+            class:
+              'pill no-shifts'
           },
           'No shifts available'
         )
@@ -1774,18 +1808,18 @@ function buildCalendar() {
       makeEl(
         'button',
         {
-          class:'btn primary',
-          type:'button'
+          class:
+            'btn primary',
+
+          type:
+            'button'
         },
-        'Select Day'
+        row.closed
+          ? 'Closed'
+          : 'View Shifts'
       );
 
 
-    /*
-     * Closed dates OR dates
-     * without any shift are
-     * not selectable.
-     */
     btn.disabled =
       row.closed ||
       row.shifts.length === 0;
@@ -1798,7 +1832,7 @@ function buildCalendar() {
         if (!btn.disabled) {
 
           openRequest(
-            row.iso
+            row.scheduleKey
           );
 
         }
@@ -1834,55 +1868,16 @@ function buildCalendar() {
 
 
 
-/***** MODAL *****/
+/***** EXACT ROW LOOKUP *****/
 
-const modal =
-  document.getElementById(
-    'requestModal'
-  );
-
-
-const form =
-  document.getElementById(
-    'requestForm'
-  );
-
-
-const shiftSelect =
-  document.getElementById(
-    'shiftSelect'
-  );
-
-
-document
-  .getElementById(
-    'closeModal'
-  )
-  .addEventListener(
-    'click',
-    () =>
-      modal.close()
-  );
-
-
-document
-  .getElementById(
-    'cancelBtn'
-  )
-  .addEventListener(
-    'click',
-    () =>
-      modal.close()
-  );
-
-
-function getRowByISO(
-  iso
+function getRowByKey(
+  scheduleKey
 ) {
 
   return ROWS.find(
     r =>
-      r.iso === iso
+      r.scheduleKey ===
+      scheduleKey
   );
 
 }
@@ -1899,34 +1894,34 @@ function populateShiftSelect(
 
 
   /*
-   * Blank required option.
-   * This is selected every
-   * time the modal opens.
+   * Always blank by default.
+   * Artist MUST deliberately
+   * select a shift.
    */
-  const blankOption =
+  const blank =
     document.createElement(
       'option'
     );
 
 
-  blankOption.value =
+  blank.value =
     '';
 
 
-  blankOption.textContent =
+  blank.textContent =
     'Select a shift';
 
 
-  blankOption.disabled =
+  blank.disabled =
     true;
 
 
-  blankOption.selected =
+  blank.selected =
     true;
 
 
   shiftSelect.append(
-    blankOption
+    blank
   );
 
 
@@ -1945,9 +1940,7 @@ function populateShiftSelect(
 
 
     option.textContent =
-      shift.label +
-      ' — ' +
-      shift.hours;
+      `${shift.label} — ${shift.hours}`;
 
 
     option.dataset.hours =
@@ -1975,7 +1968,7 @@ function populateShiftSelect(
 
 
 
-/***** UPDATE HOURS WHEN SHIFT CHANGES *****/
+/***** SHIFT CHANGE *****/
 
 shiftSelect.addEventListener(
   'change',
@@ -2002,15 +1995,25 @@ shiftSelect.addEventListener(
 
 
 
+/***** OPEN REQUEST *****/
+
 function openRequest(
-  iso
+  scheduleKey
 ) {
 
   const row =
-    getRowByISO(iso);
+    getRowByKey(
+      scheduleKey
+    );
 
 
   if (!row) {
+
+    showToast(
+      'Unable to find this event. Please refresh the page.',
+      'error'
+    );
+
     return;
   }
 
@@ -2051,10 +2054,10 @@ function openRequest(
 
   document
     .getElementById(
-      'dateISO'
+      'scheduleKey'
     )
     .value =
-      row.iso;
+      row.scheduleKey;
 
 
   document
@@ -2091,7 +2094,32 @@ function openRequest(
 
 
 
-/***** SUBMIT *****/
+/***** CLOSE MODAL *****/
+
+document
+  .getElementById(
+    'closeModal'
+  )
+  .addEventListener(
+    'click',
+    () =>
+      modal.close()
+  );
+
+
+document
+  .getElementById(
+    'cancelBtn'
+  )
+  .addEventListener(
+    'click',
+    () =>
+      modal.close()
+  );
+
+
+
+/***** SUBMIT REQUEST *****/
 
 form.addEventListener(
   'submit',
@@ -2100,48 +2128,41 @@ form.addEventListener(
     e.preventDefault();
 
 
-    const iso =
+    const scheduleKey =
       document
         .getElementById(
-          'dateISO'
+          'scheduleKey'
         )
         .value;
 
 
     const row =
-      getRowByISO(
-        iso
+      getRowByKey(
+        scheduleKey
       );
 
 
     if (!row) {
 
       showToast(
-        'Unable to find this date.'
+        'This event could not be found. Please refresh the page.',
+        'error'
       );
 
       return;
-
     }
 
 
-    /*
-     * EXTRA VALIDATION.
-     * HTML "required" also
-     * enforces this.
-     */
-    if (
-      !shiftSelect.value
-    ) {
+    if (!shiftSelect.value) {
 
       showToast(
-        'Please select a shift.'
+        'Please select a shift.',
+        'error'
       );
 
       shiftSelect.focus();
 
       return;
-
     }
 
 
@@ -2151,7 +2172,11 @@ form.addEventListener(
       ];
 
 
-    const shift =
+    const shiftId =
+      selectedOption.value;
+
+
+    const shiftLabel =
       selectedOption.dataset.label ||
       '';
 
@@ -2162,16 +2187,17 @@ form.addEventListener(
 
 
     if (
-      !shift ||
+      !shiftId ||
+      !shiftLabel ||
       !hours
     ) {
 
       showToast(
-        'Please select a valid shift.'
+        'Please select a valid shift.',
+        'error'
       );
 
       return;
-
     }
 
 
@@ -2187,11 +2213,11 @@ form.addEventListener(
     if (!fullName) {
 
       showToast(
-        'Please enter your name.'
+        'Please enter your first and last name.',
+        'error'
       );
 
       return;
-
     }
 
 
@@ -2206,6 +2232,9 @@ form.addEventListener(
 
     const data = {
 
+      scheduleKey:
+        row.scheduleKey,
+
       dateISO:
         row.iso,
 
@@ -2218,8 +2247,11 @@ form.addEventListener(
       event:
         row.event,
 
+      shiftId:
+        shiftId,
+
       shift:
-        shift,
+        shiftLabel,
 
       hours:
         hours,
@@ -2243,53 +2275,79 @@ form.addEventListener(
     };
 
 
-    saveSubmission(
-      data
-    );
+    /***** PREVENT DOUBLE CLICK *****/
+
+    submitBtn.disabled =
+      true;
 
 
-    if (APPS_SCRIPT_URL) {
+    submitBtn.textContent =
+      'Submitting…';
 
-      try {
 
-        fetch(
-          APPS_SCRIPT_URL,
-          {
-            method:'POST',
-            mode:'no-cors',
+    try {
 
-            body:
-              JSON.stringify(
-                data
-              )
-          }
-        );
+      /*
+       * Google Apps Script web apps
+       * require no-cors here.
+       *
+       * The server still performs
+       * validation before saving.
+       */
+      await fetch(
+        APPS_SCRIPT_URL,
+        {
+          method:'POST',
 
-      } catch (err) {
+          mode:'no-cors',
 
-        console.warn(
-          'Apps Script POST failed:',
-          err
-        );
+          body:
+            JSON.stringify(
+              data
+            )
+        }
+      );
 
-      }
+
+      modal.close();
+
+
+      showToast(
+        "Request submitted! We'll confirm by text or email after approval."
+      );
+
+
+    } catch (err) {
+
+      console.error(
+        'Submission failed:',
+        err
+      );
+
+
+      showToast(
+        'There was a problem submitting your request. Please try again.',
+        'error'
+      );
+
+
+    } finally {
+
+      submitBtn.disabled =
+        false;
+
+
+      submitBtn.textContent =
+        'Submit Request';
 
     }
-
-
-    modal.close();
-
-
-    showToast(
-      "Thanks! We received your submission. We'll confirm after approval."
-    );
 
   }
 );
 
 
 
-/***** START *****/
+/***** START APP *****/
 
 (async () => {
 
