@@ -10,7 +10,9 @@
     content="width=device-width, initial-scale=1, viewport-fit=cover"
   >
 
-  <title>Bubblehead — Artist Shift Picker</title>
+  <title>
+    Bubblehead — Artist Shift Picker
+  </title>
 
 
   <style>
@@ -41,6 +43,7 @@
 
     body {
       margin:0;
+
       font-family:
         ui-sans-serif,
         system-ui,
@@ -51,10 +54,14 @@
         Arial,
         sans-serif;
 
-      background:var(--bg);
-      color:var(--text);
+      background:
+        var(--bg);
 
-      -webkit-tap-highlight-color:transparent;
+      color:
+        var(--text);
+
+      -webkit-tap-highlight-color:
+        transparent;
     }
 
 
@@ -108,7 +115,8 @@
       color:#fff;
       font-weight:900;
 
-      box-shadow:var(--shadow);
+      box-shadow:
+        var(--shadow);
     }
 
 
@@ -119,8 +127,11 @@
 
 
     .sub {
-      color:var(--muted);
+      color:
+        var(--muted);
+
       font-size:12px;
+
       margin-top:2px;
     }
 
@@ -129,13 +140,17 @@
       display:flex;
       flex-wrap:wrap;
       gap:10px;
+
       align-items:center;
+
       margin-top:10px;
     }
 
 
     .range {
-      color:var(--muted);
+      color:
+        var(--muted);
+
       font-size:13px;
     }
 
@@ -161,7 +176,8 @@
 
       font-weight:600;
 
-      transition:.15s ease;
+      transition:
+        .15s ease;
 
       box-shadow:
         var(--shadow);
@@ -195,6 +211,7 @@
 
     .calendar {
       display:grid;
+
       gap:12px;
 
       margin-top:14px;
@@ -216,10 +233,10 @@
       background:
         var(--card);
 
-      position:relative;
       overflow:hidden;
 
-      transition:.15s ease;
+      transition:
+        .15s ease;
 
       box-shadow:
         var(--shadow);
@@ -234,8 +251,11 @@
 
     .day .head {
       display:flex;
+
       align-items:center;
-      justify-content:space-between;
+
+      justify-content:
+        space-between;
 
       gap:10px;
 
@@ -253,7 +273,9 @@
 
 
     .weekday {
-      color:var(--muted);
+      color:
+        var(--muted);
+
       font-size:12px;
     }
 
@@ -261,16 +283,23 @@
     .event {
       font-size:14px;
       font-weight:700;
+
       color:#3b82f6;
+
       margin-top:4px;
     }
 
 
     .meta {
       display:flex;
+
       gap:10px;
-      padding:12px 14px;
+
+      padding:
+        12px 14px;
+
       align-items:center;
+
       flex-wrap:wrap;
     }
 
@@ -297,10 +326,6 @@
     }
 
 
-    /*
-      STEADY TRAFFIC
-      Green text
-    */
     .pill.steady {
       background:#ecfdf5;
       color:#15803d;
@@ -309,10 +334,6 @@
     }
 
 
-    /*
-      STRONG TRAFFIC
-      Red text + fire
-    */
     .pill.strong {
       background:#fef2f2;
       color:#b91c1c;
@@ -329,8 +350,17 @@
     }
 
 
+    .pill.shift-count {
+      background:#eff6ff;
+      color:#1d4ed8;
+      border-color:#bfdbfe;
+      font-weight:700;
+    }
+
+
     .foot {
       display:flex;
+
       gap:8px;
 
       padding:
@@ -444,17 +474,17 @@
 
     .modal-head {
       display:flex;
+
       align-items:center;
-      justify-content:space-between;
+
+      justify-content:
+        space-between;
 
       padding:
         14px 16px;
 
       border-bottom:
         1px solid var(--border);
-
-      flex:
-        0 0 auto;
     }
 
 
@@ -462,12 +492,10 @@
       padding:16px;
 
       display:grid;
+
       gap:14px;
 
       overflow:auto;
-
-      -webkit-overflow-scrolling:
-        touch;
 
       flex:
         1 1 auto;
@@ -476,6 +504,7 @@
 
     .modal-foot {
       display:flex;
+
       gap:10px;
 
       padding:
@@ -488,21 +517,14 @@
         flex-end;
 
       background:#fff;
-
-      flex:
-        0 0 auto;
-
-      padding-bottom:
-        calc(
-          14px +
-          env(safe-area-inset-bottom)
-        );
     }
 
 
     .modal-grid {
       display:grid;
+
       gap:10px;
+
       grid-template-columns:
         repeat(2,1fr);
     }
@@ -522,7 +544,9 @@
 
     label {
       font-size:13px;
-      color:var(--muted);
+
+      color:
+        var(--muted);
 
       display:block;
 
@@ -531,7 +555,8 @@
 
 
     input[type=text],
-    textarea {
+    textarea,
+    select {
 
       width:100%;
 
@@ -550,7 +575,18 @@
       outline:none;
 
       font-size:15px;
+
       line-height:1.4;
+    }
+
+
+    select {
+      min-height:42px;
+    }
+
+
+    select:invalid {
+      color:#6b7280;
     }
 
 
@@ -561,21 +597,19 @@
 
     textarea {
       min-height:96px;
-
       max-height:40vh;
-
       resize:vertical;
     }
 
 
     input:focus,
-    textarea:focus {
+    textarea:focus,
+    select:focus {
 
       box-shadow:
         0 0 0 4px var(--ring);
 
-      border-color:
-        #93c5fd;
+      border-color:#93c5fd;
     }
 
 
@@ -586,9 +620,11 @@
           12px 14px;
       }
 
+
       .brand h1 {
         font-size:16px;
       }
+
 
       .calendar {
         grid-template-columns:
@@ -597,12 +633,14 @@
         gap:10px;
       }
 
+
       .btn {
         padding:
           14px 16px;
 
         border-radius:14px;
       }
+
 
       dialog {
         width:100vw;
@@ -616,30 +654,6 @@
         border-radius:0;
       }
 
-      .day .head {
-        padding:12px;
-      }
-
-      .meta {
-        padding:
-          10px 12px;
-
-        gap:8px;
-      }
-
-      .foot {
-        padding:
-          10px 12px;
-      }
-
-      .pill {
-        font-size:11px;
-      }
-
-    }
-
-
-    @media (max-width:420px) {
 
       .modal-grid:not(.dd) {
         grid-template-columns:
@@ -686,8 +700,8 @@
         </h1>
 
         <div class="sub">
-          Select a day to request a shift.
-          Submissions are pending approval via text or email.
+          Select a day and shift to submit a request.
+          All requests are pending approval.
         </div>
 
       </div>
@@ -710,7 +724,6 @@
         class="btn"
         id="exportBtn"
         type="button"
-        title="Download submissions made on this device"
       >
         Export CSV
       </button>
@@ -755,7 +768,6 @@
         type="button"
         class="btn"
         id="closeModal"
-        aria-label="Close"
       >
         ✕
       </button>
@@ -823,15 +835,25 @@
 
         <div>
 
-          <label>
-            Open Hours
+          <label for="shiftSelect">
+            Select a Shift *
           </label>
 
-          <input
-            type="text"
-            id="hoursDisplay"
-            readonly
+          <select
+            id="shiftSelect"
+            name="shiftSelect"
+            required
           >
+
+            <option
+              value=""
+              selected
+              disabled
+            >
+              Select a shift
+            </option>
+
+          </select>
 
         </div>
 
@@ -857,13 +879,32 @@
 
         <div>
 
+          <label>
+            Selected Hours
+          </label>
+
+          <input
+            type="text"
+            id="hoursDisplay"
+            readonly
+            placeholder="Choose a shift above"
+          >
+
+        </div>
+
+      </div>
+
+
+      <div class="modal-grid full">
+
+        <div>
+
           <label for="fullName">
             Your Name (First & Last) *
           </label>
 
           <input
             id="fullName"
-            name="fullName"
             type="text"
             required
             placeholder="Jane Doe"
@@ -884,7 +925,6 @@
 
           <textarea
             id="comments"
-            name="comments"
             placeholder="Anything we should know?"
           ></textarea>
 
@@ -896,9 +936,7 @@
       <input
         type="hidden"
         id="dateISO"
-        name="dateISO"
       >
-
 
     </div>
 
@@ -988,20 +1026,18 @@ const fmtWeekday =
 
 function parseISO(iso) {
 
-  const parts =
+  const [y,m,d] =
     String(iso)
       .split('-')
       .map(Number);
 
-  const y = parts[0];
-  const m = parts[1];
-  const d = parts[2];
 
   return new Date(
     y,
     m - 1,
     d
   );
+
 }
 
 
@@ -1030,19 +1066,12 @@ function makeEl(
 
         el.className = v;
 
-      } else if (k === 'disabled') {
-
-        el.disabled = !!v;
-
       } else if (
-        k.startsWith('on') &&
-        typeof v === 'function'
+        k === 'disabled'
       ) {
 
-        el.addEventListener(
-          k.slice(2).toLowerCase(),
-          v
-        );
+        el.disabled =
+          !!v;
 
       } else {
 
@@ -1060,8 +1089,10 @@ function makeEl(
 
   for (const child of children) {
 
-    if (child !== null &&
-        child !== undefined) {
+    if (
+      child !== null &&
+      child !== undefined
+    ) {
 
       el.append(child);
 
@@ -1071,14 +1102,15 @@ function makeEl(
 
 
   return el;
+
 }
 
 
 
-/***** LOCAL SUBMISSION HISTORY *****/
+/***** LOCAL HISTORY *****/
 
 const STORAGE_KEY =
-  'bubblehead_shift_requests_2026';
+  'bubblehead_shift_requests_2026_v2';
 
 
 function loadSubmissions() {
@@ -1140,14 +1172,25 @@ function exportCSV() {
   const headers = [
 
     'DateISO',
+
     'Date Pretty',
+
     'Weekday',
+
     'Event Title',
+
+    'Selected Shift',
+
     'Hours',
+
     'Expected Crowd',
+
     'Closed',
+
     'Full Name',
+
     'Comments',
+
     'Submitted At'
 
   ];
@@ -1158,7 +1201,9 @@ function exportCSV() {
   ];
 
 
-  for (const r of rows) {
+  for (
+    const r of rows
+  ) {
 
     const fields = [
 
@@ -1170,7 +1215,9 @@ function exportCSV() {
 
       r.event || '',
 
-      r.hours,
+      r.shift || '',
+
+      r.hours || '',
 
       r.crowd || '',
 
@@ -1204,14 +1251,20 @@ function exportCSV() {
 
 
   const url =
-    URL.createObjectURL(blob);
+    URL.createObjectURL(
+      blob
+    );
 
 
   const a =
-    document.createElement('a');
+    document.createElement(
+      'a'
+    );
 
 
-  a.href = url;
+  a.href =
+    url;
+
 
   a.download =
     'bubblehead_shift_requests_2026.csv';
@@ -1220,7 +1273,9 @@ function exportCSV() {
   a.click();
 
 
-  URL.revokeObjectURL(url);
+  URL.revokeObjectURL(
+    url
+  );
 
 }
 
@@ -1253,7 +1308,9 @@ const toastMsg =
 
 
 document
-  .getElementById('exportBtn')
+  .getElementById(
+    'exportBtn'
+  )
   .addEventListener(
     'click',
     exportCSV
@@ -1264,6 +1321,7 @@ function showToast(message) {
 
   toastMsg.textContent =
     message;
+
 
   toast.classList.add(
     'show'
@@ -1282,21 +1340,15 @@ function showToast(message) {
 
 
 
-/***** NORMALIZE GOOGLE SHEET DATA *****/
+/***** NORMALIZE DATA *****/
 
-function normalizeRows(rawRows) {
+function normalizeRows(
+  rawRows
+) {
 
   return rawRows
     .map(r => {
 
-      /*
-       * IMPORTANT:
-       * Apps Script now determines
-       * the correct year.
-       *
-       * GitHub no longer guesses
-       * 2025 / 2026.
-       */
       const iso =
         String(
           r.iso || ''
@@ -1314,34 +1366,79 @@ function normalizeRows(rawRows) {
 
       const crowd =
         String(
-          r.crowd ||
-          r.spots ||
-          ''
+          r.crowd || ''
         ).trim();
+
+
+      let shifts =
+        Array.isArray(r.shifts)
+          ? r.shifts
+          : [];
+
+
+      /*
+       * Backup compatibility:
+       * build shifts manually if an
+       * older backend does not return
+       * the shifts array.
+       */
+      if (
+        !shifts.length
+      ) {
+
+        shifts = [];
+
+
+        if (r.shift1) {
+
+          shifts.push({
+            id:'1st',
+            label:'1st Shift',
+            hours:
+              String(r.shift1)
+          });
+
+        }
+
+
+        if (r.shift2) {
+
+          shifts.push({
+            id:'2nd',
+            label:'2nd Shift',
+            hours:
+              String(r.shift2)
+          });
+
+        }
+
+
+        if (r.shift3) {
+
+          shifts.push({
+            id:'3rd',
+            label:'3rd Shift',
+            hours:
+              String(r.shift3)
+          });
+
+        }
+
+      }
 
 
       const isClosed =
         r.closed === true ||
-        /CLOSED/i.test(crowd) ||
-        /CLOSED/i.test(
-          String(
-            r.weekday || ''
-          )
-        );
+        /CLOSED/i.test(crowd);
 
 
       return {
 
-        time:
-          String(
-            r.time || ''
-          ).trim(),
-
         crowd:
           crowd,
 
-        date:
-          r.date,
+        shifts:
+          shifts,
 
         event:
           r.event ||
@@ -1353,19 +1450,12 @@ function normalizeRows(rawRows) {
         datePretty:
           fmt.format(d),
 
-        /*
-         * We calculate the weekday
-         * from the actual ISO date.
-         *
-         * This prevents last year's
-         * weekday from being copied
-         * into the new schedule.
-         */
         weekdayPretty:
           fmtWeekday.format(d),
 
         closed:
           isClosed
+
       };
 
     })
@@ -1409,11 +1499,14 @@ async function loadScheduleFromSheets() {
 
     if (
       json &&
-      Array.isArray(json.rows)
+      Array.isArray(
+        json.rows
+      )
     ) {
 
       SHEET_ROWS =
         json.rows;
+
 
       ROWS =
         normalizeRows(
@@ -1440,6 +1533,7 @@ async function loadScheduleFromSheets() {
       err
     );
 
+
     ROWS = [];
 
   }
@@ -1450,7 +1544,9 @@ async function loadScheduleFromSheets() {
 
 /***** CROWD BADGE *****/
 
-function buildCrowdBadge(row) {
+function buildCrowdBadge(
+  row
+) {
 
   if (row.closed) {
 
@@ -1519,24 +1615,27 @@ function buildCalendar() {
 
   if (ROWS.length) {
 
-    const first =
-      parseISO(
-        ROWS[0].iso
-      );
-
-
-    const last =
-      parseISO(
-        ROWS[
-          ROWS.length - 1
-        ].iso
-      );
+    const dates =
+      ROWS
+        .map(r =>
+          parseISO(r.iso)
+        )
+        .sort(
+          (a,b) =>
+            a - b
+        );
 
 
     rangeLabel.textContent =
-      fmt.format(first) +
+      fmt.format(
+        dates[0]
+      ) +
       ' – ' +
-      fmt.format(last);
+      fmt.format(
+        dates[
+          dates.length - 1
+        ]
+      );
 
 
   } else {
@@ -1550,7 +1649,9 @@ function buildCalendar() {
   calendar.innerHTML = '';
 
 
-  for (const row of ROWS) {
+  for (
+    const row of ROWS
+  ) {
 
 
     const card =
@@ -1558,7 +1659,9 @@ function buildCalendar() {
         'article',
         {
           class:'day',
+
           role:'group',
+
           'aria-label':
             row.datePretty +
             ', ' +
@@ -1595,6 +1698,7 @@ function buildCalendar() {
           },
           row.event
         )
+
       );
 
 
@@ -1607,7 +1711,9 @@ function buildCalendar() {
 
         information,
 
-        buildCrowdBadge(row)
+        buildCrowdBadge(
+          row
+        )
       );
 
 
@@ -1616,17 +1722,52 @@ function buildCalendar() {
         'div',
         {
           class:'meta'
-        },
+        }
+      );
 
+
+    if (
+      !row.closed &&
+      row.shifts.length
+    ) {
+
+      const shiftText =
+        row.shifts.length === 1
+          ? '1 Shift Available'
+          : row.shifts.length +
+            ' Shifts Available';
+
+
+      meta.append(
+        makeEl(
+          'span',
+          {
+            class:
+              'pill shift-count'
+          },
+          shiftText
+        )
+      );
+
+    }
+
+
+    if (
+      !row.closed &&
+      !row.shifts.length
+    ) {
+
+      meta.append(
         makeEl(
           'span',
           {
             class:'pill badge'
           },
-          'Time: ' +
-          row.time
+          'No shifts available'
         )
       );
+
+    }
 
 
     const btn =
@@ -1640,8 +1781,14 @@ function buildCalendar() {
       );
 
 
+    /*
+     * Closed dates OR dates
+     * without any shift are
+     * not selectable.
+     */
     btn.disabled =
-      !!row.closed;
+      row.closed ||
+      row.shifts.length === 0;
 
 
     btn.addEventListener(
@@ -1649,9 +1796,11 @@ function buildCalendar() {
       () => {
 
         if (!btn.disabled) {
+
           openRequest(
             row.iso
           );
+
         }
 
       }
@@ -1675,11 +1824,6 @@ function buildCalendar() {
     );
 
 
-    card.id =
-      'day-' +
-      row.iso;
-
-
     calendar.append(
       card
     );
@@ -1690,23 +1834,11 @@ function buildCalendar() {
 
 
 
-/***** REQUEST MODAL *****/
+/***** MODAL *****/
 
 const modal =
   document.getElementById(
     'requestModal'
-  );
-
-
-const closeModalBtn =
-  document.getElementById(
-    'closeModal'
-  );
-
-
-const cancelBtn =
-  document.getElementById(
-    'cancelBtn'
   );
 
 
@@ -1716,7 +1848,16 @@ const form =
   );
 
 
-closeModalBtn
+const shiftSelect =
+  document.getElementById(
+    'shiftSelect'
+  );
+
+
+document
+  .getElementById(
+    'closeModal'
+  )
   .addEventListener(
     'click',
     () =>
@@ -1724,7 +1865,10 @@ closeModalBtn
   );
 
 
-cancelBtn
+document
+  .getElementById(
+    'cancelBtn'
+  )
   .addEventListener(
     'click',
     () =>
@@ -1732,7 +1876,9 @@ cancelBtn
   );
 
 
-function getRowByISO(iso) {
+function getRowByISO(
+  iso
+) {
 
   return ROWS.find(
     r =>
@@ -1742,7 +1888,123 @@ function getRowByISO(iso) {
 }
 
 
-function openRequest(iso) {
+
+/***** SHIFT DROPDOWN *****/
+
+function populateShiftSelect(
+  row
+) {
+
+  shiftSelect.innerHTML = '';
+
+
+  /*
+   * Blank required option.
+   * This is selected every
+   * time the modal opens.
+   */
+  const blankOption =
+    document.createElement(
+      'option'
+    );
+
+
+  blankOption.value =
+    '';
+
+
+  blankOption.textContent =
+    'Select a shift';
+
+
+  blankOption.disabled =
+    true;
+
+
+  blankOption.selected =
+    true;
+
+
+  shiftSelect.append(
+    blankOption
+  );
+
+
+  for (
+    const shift of row.shifts
+  ) {
+
+    const option =
+      document.createElement(
+        'option'
+      );
+
+
+    option.value =
+      shift.id;
+
+
+    option.textContent =
+      shift.label +
+      ' — ' +
+      shift.hours;
+
+
+    option.dataset.hours =
+      shift.hours;
+
+
+    option.dataset.label =
+      shift.label;
+
+
+    shiftSelect.append(
+      option
+    );
+
+  }
+
+
+  document
+    .getElementById(
+      'hoursDisplay'
+    )
+    .value = '';
+
+}
+
+
+
+/***** UPDATE HOURS WHEN SHIFT CHANGES *****/
+
+shiftSelect.addEventListener(
+  'change',
+  () => {
+
+    const option =
+      shiftSelect.options[
+        shiftSelect.selectedIndex
+      ];
+
+
+    document
+      .getElementById(
+        'hoursDisplay'
+      )
+      .value =
+        option &&
+        option.dataset.hours
+          ? option.dataset.hours
+          : '';
+
+  }
+);
+
+
+
+function openRequest(
+  iso
+) {
 
   const row =
     getRowByISO(iso);
@@ -1779,14 +2041,6 @@ function openRequest(iso) {
 
   document
     .getElementById(
-      'hoursDisplay'
-    )
-    .value =
-      row.time;
-
-
-  document
-    .getElementById(
       'crowdDisplay'
     )
     .value =
@@ -1807,14 +2061,21 @@ function openRequest(iso) {
     .getElementById(
       'fullName'
     )
-    .value = '';
+    .value =
+      '';
 
 
   document
     .getElementById(
       'comments'
     )
-    .value = '';
+    .value =
+      '';
+
+
+  populateShiftSelect(
+    row
+  );
 
 
   if (
@@ -1830,7 +2091,7 @@ function openRequest(iso) {
 
 
 
-/***** SUBMIT REQUEST *****/
+/***** SUBMIT *****/
 
 form.addEventListener(
   'submit',
@@ -1848,13 +2109,65 @@ form.addEventListener(
 
 
     const row =
-      getRowByISO(iso);
+      getRowByISO(
+        iso
+      );
 
 
     if (!row) {
 
       showToast(
-        'Unable to find this shift.'
+        'Unable to find this date.'
+      );
+
+      return;
+
+    }
+
+
+    /*
+     * EXTRA VALIDATION.
+     * HTML "required" also
+     * enforces this.
+     */
+    if (
+      !shiftSelect.value
+    ) {
+
+      showToast(
+        'Please select a shift.'
+      );
+
+      shiftSelect.focus();
+
+      return;
+
+    }
+
+
+    const selectedOption =
+      shiftSelect.options[
+        shiftSelect.selectedIndex
+      ];
+
+
+    const shift =
+      selectedOption.dataset.label ||
+      '';
+
+
+    const hours =
+      selectedOption.dataset.hours ||
+      '';
+
+
+    if (
+      !shift ||
+      !hours
+    ) {
+
+      showToast(
+        'Please select a valid shift.'
       );
 
       return;
@@ -1871,15 +2184,6 @@ form.addEventListener(
         .trim();
 
 
-    const comments =
-      document
-        .getElementById(
-          'comments'
-        )
-        .value
-        .trim();
-
-
     if (!fullName) {
 
       showToast(
@@ -1889,6 +2193,15 @@ form.addEventListener(
       return;
 
     }
+
+
+    const comments =
+      document
+        .getElementById(
+          'comments'
+        )
+        .value
+        .trim();
 
 
     const data = {
@@ -1905,8 +2218,11 @@ form.addEventListener(
       event:
         row.event,
 
+      shift:
+        shift,
+
       hours:
-        row.time,
+        hours,
 
       crowd:
         row.crowd,
@@ -1936,20 +2252,12 @@ form.addEventListener(
 
       try {
 
-        /*
-         * no-cors is used because
-         * Google Apps Script web apps
-         * do not provide a normal
-         * browser CORS response.
-         *
-         * Do NOT add application/json
-         * headers here.
-         */
         fetch(
           APPS_SCRIPT_URL,
           {
             method:'POST',
             mode:'no-cors',
+
             body:
               JSON.stringify(
                 data
@@ -1981,7 +2289,7 @@ form.addEventListener(
 
 
 
-/***** START APP *****/
+/***** START *****/
 
 (async () => {
 
